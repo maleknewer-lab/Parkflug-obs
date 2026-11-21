@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Unzip file
-        run: unzip -o parkflug-ops-step1.zip -d .
+        run: unzip -o park-operations.zip -d .
       - name: Commit extracted files
         run: |
           git config --local user.email "action@github.com"
