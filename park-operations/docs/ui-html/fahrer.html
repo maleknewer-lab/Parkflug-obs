@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fahrer-App · Operations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/theme.js"></script>
+</head>
+<body data-page="fahrer">
+
+<header class="top">
+<button aria-controls="menu" aria-expanded="false" aria-label="Menü öffnen" class="iconbtn" id="menuBtn">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="20"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+</button>
+<div class="logo"><span class="m">P</span>Park Operations</div>
+<span class="crumb" id="crumb">· Fahrer-App</span>
+<span class="sp"></span>
+<span class="live"><i></i>Flugdaten live · DUS</span>
+<button aria-label="Hell/Dunkel umschalten" class="iconbtn" id="themeBtn">
+<svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+</button>
+<button aria-label="Benutzer" class="avatar" id="meBtn" title="Fawaz (Admin)">FA</button>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<nav class="menu" id="menu" aria-label="Hauptmenü">
+<div class="head"><div class="logo"><span class="m">P</span>Park Operations</div>
+<button aria-label="Menü schließen" class="iconbtn" id="menuClose"><svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="18"><path d="M6 6l12 12M18 6L6 18"></path></svg></button></div>
+<div class="me" id="menuMe"><span class="avatar">FA</span><span style="flex:1;min-width:0"><b>Fawaz</b><div class="meta">Admin</div></span></div>
+<div class="grp">Betrieb</div>
+<a class="on" data-r="uebersicht" href="uebersicht.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="9" rx="2" width="7" x="3" y="3"></rect><rect height="5" rx="2" width="7" x="14" y="3"></rect><rect height="9" rx="2" width="7" x="14" y="12"></rect><rect height="5" rx="2" width="7" x="3" y="16"></rect></svg>Übersicht</a>
+<a data-r="transfers" href="transfers.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M7 4v16M7 20l-3-3M7 20l3-3M17 20V4M17 4l-3 3M17 4l3 3"></path></svg>Transferliste<span class="badge" id="bdgT"></span></a>
+<a class="on" data-r="fahrer" href="fahrer.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="20" rx="3" width="10" x="7" y="2"></rect><path d="M11 18h2"></path></svg>Fahrer-App</a>
+<a data-r="kasse" href="kasse.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="13" rx="2" width="20" x="2" y="6"></rect><circle cx="12" cy="12.5" r="2.5"></circle><path d="M6 10v5M18 10v5"></path></svg>Tageskasse</a>
+<div class="grp">Verwaltung</div>
+<a data-r="buchungen" href="buchungen.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="18" rx="2" width="16" x="4" y="3"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg>Buchungen</a>
+<a data-r="kunden" href="kunden.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"></path></svg>Kunden</a>
+<a data-r="marketing" href="marketing.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1zM15 9a3 3 0 0 1 0 6M18 6a7 7 0 0 1 0 12"></path></svg>Angebote senden</a>
+<a data-r="belegung" href="belegung.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="18" rx="3" width="18" x="3" y="3"></rect><path d="M9 17V7h4a3 3 0 0 1 0 6H9"></path></svg>Belegung</a>
+<a data-r="rechnungen" href="rechnungen.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M6 2h9l5 5v15H6z"></path><path d="M14 2v6h6M9 13h6M9 17h6"></path></svg>Rechnungen</a>
+<a data-r="auswertung" href="auswertung.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg>Auswertung</a>
+<a data-r="tarife" href="tarife.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M20.6 13.4 12 22l-9-9V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"></path><circle cx="7.5" cy="7.5" r="1.5"></circle></svg>Tarife &amp; Preise</a>
+<a data-r="mitarbeiter" href="mitarbeiter.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path><path d="M19 3l2 2-2 2"></path></svg>Mitarbeiter &amp; Rechte</a>
+<div class="grp">Kunde</div>
+<a data-r="buchen" href="buchen.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M12 5v14M5 12h14"></path></svg>Online buchen (Website)</a>
+</nav>
+
+<main id="app">
+<div class="page"><div class="drv">
+<div class="ph"><div><h1>Hallo Fawaz</h1><p>Samstag, 21. November</p></div></div>
+<div class="drv-tools"><div class="seg" id="dSeg" style="width:100%"><button class="on" data-d="in" style="flex:1">Ankunft · 0 offen</button><button class="" data-d="out" style="flex:1">Abholung · 1 offen</button></div>
+<div class="seg" id="dLot" style="width:100%"><button class="on" data-l="alle" style="flex:1">Alle · 11</button><button class="" data-l="parkhaus" style="flex:1">Parkhaus · 5</button><button class="" data-l="aussen" style="flex:1">Außenparkplatz · 6</button></div>
+<div style="display:flex;gap:8px"><input aria-label="Buchungsnummer" class="inp mono" id="dScan" name="dScan" placeholder="QR scannen / Buchungsnr."/><button class="btn" id="dScanBtn">Öffnen</button></div></div>
+<div class="banner warn">Heute bar zu kassieren: 138,10 €</div>
+<div class="jobs"><!-- repeat .job per item --><div class="card job done" data-job="HAE8X2881" role="button" tabindex="0">
+<div class="r1"><span class="t">04:00</span><span class="chip ok"><i></i>erledigt</span></div>
+<div class="r2"><span class="plate big" style="font-size:18px">SG-HM 49</span><span class="meta">2 Erw. + 1 Kind · Shuttle · P3-48</span></div><div class="r2"><span class="chip warn" title="Bitte bereitstellen">1× Babyschale</span></div>
+<div style="font-weight:700">Elif Vogel</div>
+<div class="r2"><a class="callbtn" href="tel:+491726151690"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 172 6151690</a></div>
+<div class="note cust"><b>Kunde:</b><span>Buggy und Babytasche dabei</span></div></div><div class="card job done" data-job="DSU5B9391" role="button" tabindex="0">
+<div class="r1"><span class="t">06:30</span><span class="chip ok"><i></i>erledigt</span></div>
+<div class="r2"><span class="plate big" style="font-size:18px">DO-MO 240</span><span class="meta">2 Erw. + 2 Kinder · Shuttle · P2-52</span></div>
+<div style="font-weight:700">Lina Hoffmann</div>
+<div class="r2"><a class="callbtn" href="tel:+491751265541"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 175 1265541</a><span class="chip"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="14"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg><span class="mono">FR5184</span> · Abflug 08:45</span></div>
+<div class="note int"><b>Intern:</b><span>Elektroauto – an Ladesäule P1 stellen</span></div></div><div class="card job done" data-job="L6W5X8311" role="button" tabindex="0">
+<div class="r1"><span class="t">10:15</span><span class="chip ok"><i></i>erledigt</span></div>
+<div class="r2"><span class="plate big" style="font-size:18px">K-UP 145</span><span class="meta">1 Pers. · Shuttle · P3-54</span></div>
+<div style="font-weight:700">Leon Zimmermann</div>
+<div class="r2"><a class="callbtn" href="tel:+491773376615"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 177 3376615</a><span class="chip"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="14"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg><span class="mono">EW5979</span> · Abflug 13:00</span></div>
+<div class="note int"><b>Intern:</b><span>Kratzer hinten links schon vorhanden (Foto 12.11.)</span></div></div><div class="card job done" data-job="2JSEG3666" role="button" tabindex="0">
+<div class="r1"><span class="t">10:30</span><span class="chip ok"><i></i>erledigt</span></div>
+<div class="r2"><span class="plate big" style="font-size:18px">BO-JM 481</span><span class="meta">3 Pers. · Shuttle · P4-20</span></div>
+<div style="font-weight:700">Leon Wagner</div>
+<div class="r2"><a class="callbtn" href="tel:+491786448621"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 178 6448621</a><span class="chip"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="14"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg><span class="mono">VY4957</span> · Abflug 13:00</span></div>
+<div class="note cust"><b>Kunde:</b><span>Komme evtl. 20 Min. später</span></div></div><div class="card job done" data-job="HM24P6953" role="button" tabindex="0">
+<div class="r1"><span class="t">12:15</span><span class="chip ok"><i></i>erledigt</span></div>
+<div class="r2"><span class="plate big" style="font-size:18px">DU-UC 180</span><span class="meta">1 Pers. · Shuttle · P2-33</span></div>
+<div style="font-weight:700">Felix Klein</div>
+<div class="r2"><a class="callbtn" href="tel:+491757130836"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 175 7130836</a></div>
+</div><div class="card job done" data-job="V8R5V7680" role="button" tabindex="0">
+<div class="r1"><span class="t">13:30</span><span class="chip ok"><i></i>erledigt</span></div>
+<div class="r2"><span class="plate big" style="font-size:18px">D-QO 870</span><span class="meta">2 Pers. · Shuttle · P4-27</span></div>
+<div style="font-weight:700">Tim Zimmermann</div>
+<div class="r2"><a class="callbtn" href="tel:+491714329268"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 171 4329268</a></div>
+</div></div>
+</div></div>
+</main>
+
+<div class="toast" id="toast" role="status"></div>
+<script src="js/ui.js" defer></script>
+</body>
+</html>

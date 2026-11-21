@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buchungen · Operations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/theme.js"></script>
+</head>
+<body data-page="buchungen">
+
+<header class="top">
+<button aria-controls="menu" aria-expanded="false" aria-label="Menü öffnen" class="iconbtn" id="menuBtn">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="20"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+</button>
+<div class="logo"><span class="m">P</span>Park Operations</div>
+<span class="crumb" id="crumb">· Buchungen</span>
+<span class="sp"></span>
+<span class="live"><i></i>Flugdaten live · DUS</span>
+<button aria-label="Hell/Dunkel umschalten" class="iconbtn" id="themeBtn">
+<svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+</button>
+<button aria-label="Benutzer" class="avatar" id="meBtn" title="Fawaz (Admin)">FA</button>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<nav class="menu" id="menu" aria-label="Hauptmenü">
+<div class="head"><div class="logo"><span class="m">P</span>Park Operations</div>
+<button aria-label="Menü schließen" class="iconbtn" id="menuClose"><svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="18"><path d="M6 6l12 12M18 6L6 18"></path></svg></button></div>
+<div class="me" id="menuMe"><span class="avatar">FA</span><span style="flex:1;min-width:0"><b>Fawaz</b><div class="meta">Admin</div></span></div>
+<div class="grp">Betrieb</div>
+<a class="on" data-r="uebersicht" href="uebersicht.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="9" rx="2" width="7" x="3" y="3"></rect><rect height="5" rx="2" width="7" x="14" y="3"></rect><rect height="9" rx="2" width="7" x="14" y="12"></rect><rect height="5" rx="2" width="7" x="3" y="16"></rect></svg>Übersicht</a>
+<a data-r="transfers" href="transfers.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M7 4v16M7 20l-3-3M7 20l3-3M17 20V4M17 4l-3 3M17 4l3 3"></path></svg>Transferliste<span class="badge" id="bdgT"></span></a>
+<a data-r="fahrer" href="fahrer.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="20" rx="3" width="10" x="7" y="2"></rect><path d="M11 18h2"></path></svg>Fahrer-App</a>
+<a data-r="kasse" href="kasse.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="13" rx="2" width="20" x="2" y="6"></rect><circle cx="12" cy="12.5" r="2.5"></circle><path d="M6 10v5M18 10v5"></path></svg>Tageskasse</a>
+<div class="grp">Verwaltung</div>
+<a class="on" data-r="buchungen" href="buchungen.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="18" rx="2" width="16" x="4" y="3"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg>Buchungen</a>
+<a data-r="kunden" href="kunden.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"></path></svg>Kunden</a>
+<a data-r="marketing" href="marketing.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1zM15 9a3 3 0 0 1 0 6M18 6a7 7 0 0 1 0 12"></path></svg>Angebote senden</a>
+<a data-r="belegung" href="belegung.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="18" rx="3" width="18" x="3" y="3"></rect><path d="M9 17V7h4a3 3 0 0 1 0 6H9"></path></svg>Belegung</a>
+<a data-r="rechnungen" href="rechnungen.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M6 2h9l5 5v15H6z"></path><path d="M14 2v6h6M9 13h6M9 17h6"></path></svg>Rechnungen</a>
+<a data-r="auswertung" href="auswertung.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg>Auswertung</a>
+<a data-r="tarife" href="tarife.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M20.6 13.4 12 22l-9-9V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"></path><circle cx="7.5" cy="7.5" r="1.5"></circle></svg>Tarife &amp; Preise</a>
+<a data-r="mitarbeiter" href="mitarbeiter.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path><path d="M19 3l2 2-2 2"></path></svg>Mitarbeiter &amp; Rechte</a>
+<div class="grp">Kunde</div>
+<a data-r="buchen" href="buchen.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M12 5v14M5 12h14"></path></svg>Online buchen (Website)</a>
+</nav>
+
+<main id="app">
+<div class="page">
+<div class="ph"><div><h1>Buchungen</h1><p>104 von 104</p></div><a class="btn go" href="buchen.html">+ Neue Buchung</a></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap"><input aria-label="Suche" class="inp" id="bq" name="bq" placeholder="Suchen: Name, Nr., Kennzeichen, Telefon" style="max-width:380px" value=""/>
+<div class="seg" id="bSeg"><button class="on" data-t="alle">Alle</button><button class="" data-t="bestätigt">Bestätigt</button><button class="" data-t="unbestätigt">Unbestätigt</button><button class="" data-t="storniert">Storniert</button></div></div>
+<div class="card scroll"><table class="tbl"><thead><tr><th>Nr.</th><th>Kunde</th><th>Fahrzeug</th><th>Zeitraum</th><th>Tarif · Quelle</th><th>Status</th><th style="text-align:right">Preis</th></tr></thead><tbody>
+<!-- repeat <tr> per item --><tr class="click" data-href="buchung.html?code=PRM8X3756" data-open="PRM8X3756"><td><span class="code">PRM8X3756</span><div class="meta">19.11. 21:54</div></td>
+<td><b>Mia Jansen</b><div><a class="tel" href="tel:+491746572000"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 174 6572000</a></div></td>
+<td><span class="plate">KR-DH 760</span><div class="meta">4 Pers.</div></td>
+<td class="mono" style="font-size:13px;white-space:nowrap">22.11. 11:45<br/><span class="muted">27.11. 13:50</span></td>
+<td>Shuttle · Parkhaus<div class="meta">Ich-Parke-Billiger</div></td><td><span class="chip ok"><i></i>Bestätigt</span><div style="margin-top:4px"><span class="chip">Erwartet</span></div></td>
+<td style="text-align:right"><div class="price paid">61,45 €</div><div class="meta">Ich-Parke-Billiger · bezahlt</div></td></tr><tr class="click" data-href="buchung.html?code=U3UK99973" data-open="U3UK99973"><td><span class="code">U3UK99973</span><div class="meta">19.11. 21:54</div></td>
+<td><b>Mia Kaya</b><div><a class="tel" href="tel:+491783574821"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 178 3574821</a></div><div class="meta"><span class="chip warn">Kunden-Hinweis</span></div></td>
+<td><span class="plate">KR-TM 84</span><div class="meta">1 Pers.</div></td>
+<td class="mono" style="font-size:13px;white-space:nowrap">15.12. 13:15<br/><span class="muted">26.12. 12:00</span></td>
+<td>Valet · Übergabe am Terminal<div class="meta">Parkos</div></td><td><span class="chip ok"><i></i>Bestätigt</span><div style="margin-top:4px"><span class="chip">Erwartet</span></div></td>
+<td style="text-align:right"><div class="price paid">104,00 €</div><div class="meta">Parkos · bezahlt</div></td></tr><tr class="click" data-href="buchung.html?code=ZSQ7F3029" data-open="ZSQ7F3029"><td><span class="code">ZSQ7F3029</span><div class="meta">19.11. 21:54</div></td>
+<td><b>Ben Neumann</b><div><a class="tel" href="tel:+491783477433"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 178 3477433</a></div><div class="meta"><span class="chip warn">Kunden-Hinweis</span></div></td>
+<td><span class="plate">W-JZ 492</span><div class="meta">3 Pers.</div></td>
+<td class="mono" style="font-size:13px;white-space:nowrap">22.11. 17:00<br/><span class="muted">26.11. 16:00</span></td>
+<td>Valet · Übergabe am Terminal<div class="meta">Parkos</div></td><td><span class="chip ok"><i></i>Bestätigt</span><div style="margin-top:4px"><span class="chip">Erwartet</span></div></td>
+<td style="text-align:right"><div class="price paid">72,45 €</div><div class="meta">Parkos · bezahlt</div></td></tr><tr class="click" data-href="buchung.html?code=A7N6H2087" data-open="A7N6H2087"><td><span class="code">A7N6H2087</span><div class="meta">19.11. 18:45</div></td>
+<td><b>Elias Lange</b><div><a class="tel" href="tel:+491738835007"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 173 8835007</a></div><div class="meta"><span class="chip warn">Kunden-Hinweis</span></div></td>
+<td><span class="plate">KR-DB 907</span><div class="meta">3 Pers.</div></td>
+<td class="mono" style="font-size:13px;white-space:nowrap">21.11. 18:45<br/><span class="muted">03.12. 08:40</span></td>
+<td>Valet · Übergabe am Terminal<div class="meta">X-Park</div></td><td><span class="chip ok"><i></i>Bestätigt</span><div style="margin-top:4px"><span class="chip info">Zum Flughafen gebracht</span></div></td>
+<td style="text-align:right"><div class="price paid">114,45 €</div><div class="meta">Online · bezahlt</div></td></tr><tr class="click" data-href="buchung.html?code=8M83A9150" data-open="8M83A9150"><td><span class="code">8M83A9150</span><div class="meta">19.11. 05:00</div></td>
+<td><b>Laura Zimmermann</b><div><a class="tel" href="tel:+491732956995"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 173 2956995</a></div><div class="meta"><span class="chip warn">Kunden-Hinweis</span></div></td>
+<td><span class="plate">SG-GI 620</span><div class="meta">1 Erw. + 2 Kinder</div><span class="chip warn" title="Bitte bereitstellen">1× Sitzerhöhung</span></td>
+<td class="mono" style="font-size:13px;white-space:nowrap">20.11. 05:00<br/><span class="muted">01.12. 14:20</span></td>
+<td>Shuttle · Parkhaus<div class="meta">X-Park</div></td><td><span class="chip ok"><i></i>Bestätigt</span><div style="margin-top:4px"><span class="chip info">Zum Flughafen gebracht</span></div></td>
+<td style="text-align:right"><div class="price cash">76,65 €</div><div class="meta">bar kassieren</div></td></tr><tr class="click" data-href="buchung.html?code=EGG3G2234" data-open="EGG3G2234"><td><span class="code">EGG3G2234</span><div class="meta">18.11. 21:54</div></td>
+<td><b>Emma Jansen</b><div><a class="tel" href="tel:+491723946249"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 172 3946249</a></div><div class="meta"><span class="chip warn">Kunden-Hinweis</span></div></td>
+<td><span class="plate">K-US 32</span><div class="meta">3 Pers.</div></td>
+<td class="mono" style="font-size:13px;white-space:nowrap">28.11. 11:15<br/><span class="muted">10.12. 21:30</span></td>
+<td>Shuttle · Parkhaus<div class="meta">X-Park</div></td><td><span class="chip ok"><i></i>Bestätigt</span><div style="margin-top:4px"><span class="chip">Erwartet</span></div></td>
+<td style="text-align:right"><div class="price paid">77,00 €</div><div class="meta">Online · bezahlt</div></td></tr><tr class="click" data-href="buchung.html?code=8FL479500" data-open="8FL479500"><td><span class="code">8FL479500</span><div class="meta">18.11. 21:54</div></td>
+<td><b>Marie Hartmann</b><div><a class="tel" href="tel:+491745464162"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 174 5464162</a></div><div class="meta"><span class="chip" style="background:var(--violet-soft);color:var(--violet)">Intern</span></div></td>
+<td><span class="plate">W-JO 610</span><div class="meta">1 Pers.</div></td>
+<td class="mono" style="font-size:13px;white-space:nowrap">04.12. 07:00<br/><span class="muted">07.12. 20:30</span></td>
+<td>Shuttle · Parkhaus<div class="meta">Parkos</div></td><td><span class="chip ok"><i></i>Bestätigt</span><div style="margin-top:4px"><span class="chip">Erwartet</span></div></td>
+<td style="text-align:right"><div class="price paid">41,00 €</div><div class="meta">Parkos · bezahlt</div></td></tr><tr class="click" data-href="buchung.html?code=QKE4N9556" data-open="QKE4N9556"><td><span class="code">QKE4N9556</span><div class="meta">17.11. 21:54</div></td>
+<td><b>Lukas Lange</b><div><a class="tel" href="tel:+491746152256"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 174 6152256</a></div></td>
+<td><span class="plate">E-GH 716</span><div class="meta">2 Pers.</div></td>
+<td class="mono" style="font-size:13px;white-space:nowrap">01.12. 20:45<br/><span class="muted">15.12. 07:40</span></td>
+<td>Shuttle · Außenparkplatz<div class="meta">X-Park</div></td><td><span class="chip ok"><i></i>Bestätigt</span><div style="margin-top:4px"><span class="chip">Erwartet</span></div></td>
+<td style="text-align:right"><div class="price paid">64,50 €</div><div class="meta">Online · bezahlt</div></td></tr></tbody></table></div></div>
+</main>
+
+<div class="toast" id="toast" role="status"></div>
+<script src="js/ui.js" defer></script>
+</body>
+</html>

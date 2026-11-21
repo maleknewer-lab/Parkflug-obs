@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mitarbeiter & Rechte · Operations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/theme.js"></script>
+</head>
+<body data-page="mitarbeiter">
+
+<header class="top">
+<button aria-controls="menu" aria-expanded="false" aria-label="Menü öffnen" class="iconbtn" id="menuBtn">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="20"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+</button>
+<div class="logo"><span class="m">P</span>Park Operations</div>
+<span class="crumb" id="crumb">· Mitarbeiter &amp; Rechte</span>
+<span class="sp"></span>
+<span class="live"><i></i>Flugdaten live · DUS</span>
+<button aria-label="Hell/Dunkel umschalten" class="iconbtn" id="themeBtn">
+<svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+</button>
+<button aria-label="Benutzer" class="avatar" id="meBtn" title="Fawaz (Admin)">FA</button>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<nav class="menu" id="menu" aria-label="Hauptmenü">
+<div class="head"><div class="logo"><span class="m">P</span>Park Operations</div>
+<button aria-label="Menü schließen" class="iconbtn" id="menuClose"><svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="18"><path d="M6 6l12 12M18 6L6 18"></path></svg></button></div>
+<div class="me" id="menuMe"><span class="avatar">FA</span><span style="flex:1;min-width:0"><b>Fawaz</b><div class="meta">Admin</div></span></div>
+<div class="grp">Betrieb</div>
+<a class="on" data-r="uebersicht" href="uebersicht.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="9" rx="2" width="7" x="3" y="3"></rect><rect height="5" rx="2" width="7" x="14" y="3"></rect><rect height="9" rx="2" width="7" x="14" y="12"></rect><rect height="5" rx="2" width="7" x="3" y="16"></rect></svg>Übersicht</a>
+<a data-r="transfers" href="transfers.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M7 4v16M7 20l-3-3M7 20l3-3M17 20V4M17 4l-3 3M17 4l3 3"></path></svg>Transferliste<span class="badge" id="bdgT"></span></a>
+<a data-r="fahrer" href="fahrer.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="20" rx="3" width="10" x="7" y="2"></rect><path d="M11 18h2"></path></svg>Fahrer-App</a>
+<a data-r="kasse" href="kasse.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="13" rx="2" width="20" x="2" y="6"></rect><circle cx="12" cy="12.5" r="2.5"></circle><path d="M6 10v5M18 10v5"></path></svg>Tageskasse</a>
+<div class="grp">Verwaltung</div>
+<a data-r="buchungen" href="buchungen.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="18" rx="2" width="16" x="4" y="3"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg>Buchungen</a>
+<a data-r="kunden" href="kunden.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"></path></svg>Kunden</a>
+<a data-r="marketing" href="marketing.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1zM15 9a3 3 0 0 1 0 6M18 6a7 7 0 0 1 0 12"></path></svg>Angebote senden</a>
+<a data-r="belegung" href="belegung.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="18" rx="3" width="18" x="3" y="3"></rect><path d="M9 17V7h4a3 3 0 0 1 0 6H9"></path></svg>Belegung</a>
+<a data-r="rechnungen" href="rechnungen.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M6 2h9l5 5v15H6z"></path><path d="M14 2v6h6M9 13h6M9 17h6"></path></svg>Rechnungen</a>
+<a data-r="auswertung" href="auswertung.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg>Auswertung</a>
+<a data-r="tarife" href="tarife.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M20.6 13.4 12 22l-9-9V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"></path><circle cx="7.5" cy="7.5" r="1.5"></circle></svg>Tarife &amp; Preise</a>
+<a class="on" data-r="mitarbeiter" href="mitarbeiter.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path><path d="M19 3l2 2-2 2"></path></svg>Mitarbeiter &amp; Rechte</a>
+<div class="grp">Kunde</div>
+<a data-r="buchen" href="buchen.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M12 5v14M5 12h14"></path></svg>Online buchen (Website)</a>
+</nav>
+
+<main id="app">
+<div class="page">
+<div class="ph"><div><h1>Mitarbeiter &amp; Rechte</h1><p>5 Zugänge · Anmeldung per eigener E-Mail</p></div><button class="btn go" id="sAddBtn">+ Mitarbeiter</button></div>
+<div class="kpis"><div class="card kpi hero"><span class="l">Jetzt im Dienst</span><span class="v num">3</span><span class="s">Fawaz, Karim, Jonas</span></div>
+<div class="card kpi"><span class="l">Heute gearbeitet</span><span class="v num">4</span><span class="s">Fawaz, Sara, Karim, Jonas</span></div>
+<div class="card kpi"><span class="l">Heute nicht da</span><span class="v num" style="color:var(--red)">1</span><span class="s">Ali</span></div>
+<div class="card kpi"><span class="l">Stunden 7 Tage</span><span class="v num">233,0</span><span class="s">alle Mitarbeiter</span></div></div>
+<div class="card pad" hidden="" id="sAdd"><div class="sec-t">Neuen Mitarbeiter einladen</div><div class="kgrid" style="align-items:end">
+<label class="field">Name<input class="inp" id="sName" name="sName" placeholder="Vorname"/></label><label class="field">E-Mail<input class="inp" id="sMail" name="sMail" placeholder="name@parkflug.de" type="email"/></label>
+<label class="field">Rolle<select class="inp" id="sRole" name="sRole"><option value="admin">Admin</option><option value="dispo">Büro / Disposition</option><option selected="" value="fahrer">Fahrer</option></select></label><button class="btn" id="sSave">Einladung senden</button></div>
+<div class="meta" style="margin-top:8px">Der Mitarbeiter bekommt eine E-Mail mit Link und legt sein Passwort selbst fest.</div></div>
+<div class="card scroll"><table class="tbl"><thead><tr><th>Mitarbeiter</th><th>Rolle</th><th>Heute</th><th>Check-in / -out</th><th style="text-align:right">Kasse heute</th><th style="text-align:right">Std. 7 Tage</th><th>Aktiv</th></tr></thead><tbody>
+<tr><td><div style="display:flex;gap:10px;align-items:center"><span class="dot on"></span><div><b>Fawaz</b> <span class="meta">(du)</span><div class="meta">fawaz@parkflug.de</div></div></div></td>
+<td><select class="inp" data-urole="0" disabled="" style="width:auto;padding:6px 10px"><option selected="" value="admin">Admin</option><option value="dispo">Büro / Disposition</option><option value="fahrer">Fahrer</option></select></td>
+<td><span class="chip ok"><i></i>Im Dienst seit 21:54</span></td><td class="num">4 / 5</td><td class="num" style="text-align:right">86,00 €</td><td class="num" style="text-align:right">40,6</td>
+<td><label class="check" style="margin:0"><input checked="" data-uact="0" disabled="" type="checkbox"/><span></span></label></td></tr><tr><td><div style="display:flex;gap:10px;align-items:center"><span class="dot done"></span><div><b>Sara</b><div class="meta">sara@parkflug.de</div></div></div></td>
+<td><select class="inp" data-urole="1" style="width:auto;padding:6px 10px"><option value="admin">Admin</option><option selected="" value="dispo">Büro / Disposition</option><option value="fahrer">Fahrer</option></select></td>
+<td><span class="chip">Heute 13:34–21:19</span></td><td class="num">0 / 0</td><td class="num" style="text-align:right">0,00 €</td><td class="num" style="text-align:right">55,7</td>
+<td><label class="check" style="margin:0"><input checked="" data-uact="1" type="checkbox"/><span></span></label></td></tr><tr><td><div style="display:flex;gap:10px;align-items:center"><span class="dot on"></span><div><b>Karim</b><div class="meta">karim@parkflug.de</div></div></div></td>
+<td><select class="inp" data-urole="2" style="width:auto;padding:6px 10px"><option value="admin">Admin</option><option value="dispo">Büro / Disposition</option><option selected="" value="fahrer">Fahrer</option></select></td>
+<td><span class="chip ok"><i></i>Im Dienst seit 16:42</span></td><td class="num">3 / 3</td><td class="num" style="text-align:right">0,00 €</td><td class="num" style="text-align:right">53,8</td>
+<td><label class="check" style="margin:0"><input checked="" data-uact="2" type="checkbox"/><span></span></label></td></tr><tr><td><div style="display:flex;gap:10px;align-items:center"><span class="dot on"></span><div><b>Jonas</b><div class="meta">jonas@parkflug.de</div></div></div></td>
+<td><select class="inp" data-urole="3" style="width:auto;padding:6px 10px"><option value="admin">Admin</option><option value="dispo">Büro / Disposition</option><option selected="" value="fahrer">Fahrer</option></select></td>
+<td><span class="chip ok"><i></i>Im Dienst seit 20:19</span></td><td class="num">1 / 1</td><td class="num" style="text-align:right">0,00 €</td><td class="num" style="text-align:right">40,7</td>
+<td><label class="check" style="margin:0"><input checked="" data-uact="3" type="checkbox"/><span></span></label></td></tr><tr><td><div style="display:flex;gap:10px;align-items:center"><span class="dot"></span><div><b>Ali</b><div class="meta">ali@parkflug.de</div></div></div></td>
+<td><select class="inp" data-urole="4" style="width:auto;padding:6px 10px"><option value="admin">Admin</option><option value="dispo">Büro / Disposition</option><option selected="" value="fahrer">Fahrer</option></select></td>
+<td><span class="chip bad">Heute nicht gearbeitet</span></td><td class="num">3 / 4</td><td class="num" style="text-align:right">58,30 €</td><td class="num" style="text-align:right">42,2</td>
+<td><label class="check" style="margin:0"><input checked="" data-uact="4" type="checkbox"/><span></span></label></td></tr></tbody></table></div>
+<div class="card scroll"><div class="pad" style="padding-bottom:6px"><div class="sec-t" style="margin:0">Anwesenheit letzte 7 Tage</div></div><table class="tbl"><thead><tr><th>Mitarbeiter</th><th>So 15.11.</th><th>Mo 16.11.</th><th>Di 17.11.</th><th>Mi 18.11.</th><th>Do 19.11.</th><th>Fr 20.11.</th><th>Sa 21.11.</th></tr></thead><tbody>
+<tr><td><b>Fawaz</b></td><td><div class="att"><span class="mono">07:00–14:37</span><span class="meta">7,6 Std.</span></div></td><td><div class="att"><span class="mono">07:00–15:31</span><span class="meta">8,5 Std.</span></div></td><td><div class="att"><span class="mono">06:00–13:35</span><span class="meta">7,6 Std.</span></div></td><td><div class="att"><span class="mono">05:00–13:23</span><span class="meta">8,4 Std.</span></div></td><td><span class="muted">–</span></td><td><div class="att"><span class="mono">13:00–21:32</span><span class="meta">8,5 Std.</span></div></td><td><div class="att"><span class="mono">21:54–jetzt</span><span class="meta">0,0 Std.</span></div></td></tr><tr><td><b>Sara</b></td><td><div class="att"><span class="mono">13:15–20:22</span><span class="meta">7,1 Std.</span></div></td><td><div class="att"><span class="mono">07:15–15:01</span><span class="meta">7,8 Std.</span></div></td><td><div class="att"><span class="mono">12:15–21:17</span><span class="meta">9,0 Std.</span></div></td><td><div class="att"><span class="mono">07:15–15:36</span><span class="meta">8,3 Std.</span></div></td><td><div class="att"><span class="mono">13:15–19:33</span><span class="meta">6,3 Std.</span></div></td><td><div class="att"><span class="mono">12:15–21:40</span><span class="meta">9,4 Std.</span></div></td><td><div class="att"><span class="mono">13:34–21:19</span><span class="meta">7,8 Std.</span></div></td></tr><tr><td><b>Karim</b></td><td><div class="att"><span class="mono">06:30–15:00</span><span class="meta">8,5 Std.</span></div></td><td><div class="att"><span class="mono">13:30–21:13</span><span class="meta">7,7 Std.</span></div></td><td><div class="att"><span class="mono">12:30–20:55</span><span class="meta">8,4 Std.</span></div></td><td><div class="att"><span class="mono">13:30–21:05</span><span class="meta">7,6 Std.</span></div></td><td><div class="att"><span class="mono">07:30–14:46</span><span class="meta">7,3 Std.</span></div></td><td><div class="att"><span class="mono">12:30–21:35</span><span class="meta">9,1 Std.</span></div></td><td><div class="att"><span class="mono">16:42–jetzt</span><span class="meta">5,2 Std.</span></div></td></tr><tr><td><b>Jonas</b></td><td><div class="att"><span class="mono">05:45–14:56</span><span class="meta">9,2 Std.</span></div></td><td><div class="att"><span class="mono">05:45–13:14</span><span class="meta">7,5 Std.</span></div></td><td><div class="att"><span class="mono">13:45–23:29</span><span class="meta">9,7 Std.</span></div></td><td><span class="muted">–</span></td><td><div class="att"><span class="mono">05:45–11:48</span><span class="meta">6,0 Std.</span></div></td><td><div class="att"><span class="mono">12:45–19:22</span><span class="meta">6,6 Std.</span></div></td><td><div class="att"><span class="mono">20:19–jetzt</span><span class="meta">1,6 Std.</span></div></td></tr><tr><td><b>Ali</b></td><td><div class="att"><span class="mono">06:00–15:05</span><span class="meta">9,1 Std.</span></div></td><td><div class="att"><span class="mono">05:00–14:31</span><span class="meta">9,5 Std.</span></div></td><td><span class="muted">–</span></td><td><div class="att"><span class="mono">13:00–21:33</span><span class="meta">8,6 Std.</span></div></td><td><div class="att"><span class="mono">06:00–12:28</span><span class="meta">6,5 Std.</span></div></td><td><div class="att"><span class="mono">12:00–20:35</span><span class="meta">8,6 Std.</span></div></td><td><span class="muted">–</span></td></tr></tbody></table></div>
+<div class="card scroll"><div class="pad" style="padding-bottom:6px"><div class="sec-t" style="margin:0">Wer darf was?</div></div><table class="tbl permtbl"><thead><tr><th>Bereich</th><th>Admin</th><th>Büro / Disposition</th><th>Fahrer</th></tr></thead><tbody>
+<tr><td>Übersicht</td><td><span class="chip ok">✓</span></td><td><span class="chip ok">✓</span></td><td><span class="muted">–</span></td></tr><tr><td>Transferliste</td><td><span class="chip ok">✓</span></td><td><span class="chip ok">✓</span></td><td><span class="chip ok">✓</span></td></tr><tr><td>Fahrer-App</td><td><span class="chip ok">✓</span></td><td><span class="chip ok">✓</span></td><td><span class="chip ok">✓</span></td></tr><tr><td>Tageskasse</td><td><span class="chip ok">✓</span></td><td><span class="chip ok">nur heute</span></td><td><span class="chip ok">nur eigene</span></td></tr><tr><td>Buchungen</td><td><span class="chip ok">✓</span></td><td><span class="chip ok">✓</span></td><td><span class="muted">–</span></td></tr><tr><td>Kunden</td><td><span class="chip ok">✓</span></td><td><span class="chip ok">✓</span></td><td><span class="muted">–</span></td></tr><tr><td>Belegung</td><td><span class="chip ok">✓</span></td><td><span class="chip ok">✓</span></td><td><span class="muted">–</span></td></tr><tr><td>Online buchen</td><td><span class="chip ok">✓</span></td><td><span class="chip ok">✓</span></td><td><span class="muted">–</span></td></tr><tr><td>Rechnungen</td><td><span class="chip ok">✓</span></td><td><span class="muted">–</span></td><td><span class="muted">–</span></td></tr><tr><td>Auswertung &amp; Umsatz</td><td><span class="chip ok">✓</span></td><td><span class="muted">–</span></td><td><span class="muted">–</span></td></tr><tr><td>Tarife &amp; Preise</td><td><span class="chip ok">✓</span></td><td><span class="muted">–</span></td><td><span class="muted">–</span></td></tr><tr><td>Angebote senden</td><td><span class="chip ok">✓</span></td><td><span class="muted">–</span></td><td><span class="muted">–</span></td></tr><tr><td>Mitarbeiter</td><td><span class="chip ok">✓</span></td><td><span class="muted">–</span></td><td><span class="muted">–</span></td></tr></tbody></table>
+<div class="meta pad" style="padding-top:0">Gesamtumsatz, Börsen-Chart, Rechnungen, Preise und Mitarbeiter sieht nur der Admin.</div></div>
+</div>
+</main>
+
+<div class="toast" id="toast" role="status"></div>
+<script src="js/ui.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Angebote senden · Operations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/theme.js"></script>
+</head>
+<body data-page="marketing">
+
+<header class="top">
+<button aria-controls="menu" aria-expanded="false" aria-label="Menü öffnen" class="iconbtn" id="menuBtn">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="20"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+</button>
+<div class="logo"><span class="m">P</span>Park Operations</div>
+<span class="crumb" id="crumb">· Angebote senden</span>
+<span class="sp"></span>
+<span class="live"><i></i>Flugdaten live · DUS</span>
+<button aria-label="Hell/Dunkel umschalten" class="iconbtn" id="themeBtn">
+<svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+</button>
+<button aria-label="Benutzer" class="avatar" id="meBtn" title="Fawaz (Admin)">FA</button>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<nav class="menu" id="menu" aria-label="Hauptmenü">
+<div class="head"><div class="logo"><span class="m">P</span>Park Operations</div>
+<button aria-label="Menü schließen" class="iconbtn" id="menuClose"><svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="18"><path d="M6 6l12 12M18 6L6 18"></path></svg></button></div>
+<div class="me" id="menuMe"><span class="avatar">FA</span><span style="flex:1;min-width:0"><b>Fawaz</b><div class="meta">Admin</div></span></div>
+<div class="grp">Betrieb</div>
+<a class="on" data-r="uebersicht" href="uebersicht.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="9" rx="2" width="7" x="3" y="3"></rect><rect height="5" rx="2" width="7" x="14" y="3"></rect><rect height="9" rx="2" width="7" x="14" y="12"></rect><rect height="5" rx="2" width="7" x="3" y="16"></rect></svg>Übersicht</a>
+<a data-r="transfers" href="transfers.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M7 4v16M7 20l-3-3M7 20l3-3M17 20V4M17 4l-3 3M17 4l3 3"></path></svg>Transferliste<span class="badge" id="bdgT"></span></a>
+<a data-r="fahrer" href="fahrer.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="20" rx="3" width="10" x="7" y="2"></rect><path d="M11 18h2"></path></svg>Fahrer-App</a>
+<a data-r="kasse" href="kasse.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="13" rx="2" width="20" x="2" y="6"></rect><circle cx="12" cy="12.5" r="2.5"></circle><path d="M6 10v5M18 10v5"></path></svg>Tageskasse</a>
+<div class="grp">Verwaltung</div>
+<a data-r="buchungen" href="buchungen.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="18" rx="2" width="16" x="4" y="3"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg>Buchungen</a>
+<a data-r="kunden" href="kunden.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"></path></svg>Kunden</a>
+<a class="on" data-r="marketing" href="marketing.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1zM15 9a3 3 0 0 1 0 6M18 6a7 7 0 0 1 0 12"></path></svg>Angebote senden</a>
+<a data-r="belegung" href="belegung.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="18" rx="3" width="18" x="3" y="3"></rect><path d="M9 17V7h4a3 3 0 0 1 0 6H9"></path></svg>Belegung</a>
+<a data-r="rechnungen" href="rechnungen.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M6 2h9l5 5v15H6z"></path><path d="M14 2v6h6M9 13h6M9 17h6"></path></svg>Rechnungen</a>
+<a data-r="auswertung" href="auswertung.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg>Auswertung</a>
+<a data-r="tarife" href="tarife.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M20.6 13.4 12 22l-9-9V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"></path><circle cx="7.5" cy="7.5" r="1.5"></circle></svg>Tarife &amp; Preise</a>
+<a data-r="mitarbeiter" href="mitarbeiter.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path><path d="M19 3l2 2-2 2"></path></svg>Mitarbeiter &amp; Rechte</a>
+<div class="grp">Kunde</div>
+<a data-r="buchen" href="buchen.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M12 5v14M5 12h14"></path></svg>Online buchen (Website)</a>
+</nav>
+
+<main id="app">
+<div class="page"><div class="ph"><div><h1>Angebote senden</h1><p>Rabatt-Aktionen an Ihre Kunden per E-Mail oder SMS.</p></div></div>
+<div class="kpis">
+<div class="card kpi"><span class="l">Kunden gesamt</span><span class="v num">95</span></div>
+<div class="card kpi"><span class="l">E-Mail erlaubt</span><span class="v num">88</span><span class="s">Bestandskunden, nicht abgemeldet</span></div>
+<div class="card kpi"><span class="l">SMS/WhatsApp erlaubt</span><span class="v num">57</span><span class="s">nur mit Häkchen bei der Buchung</span></div>
+<div class="card kpi"><span class="l">Abgemeldet</span><span class="v num">7</span><span class="s">bekommen keine Werbung</span></div></div>
+<div class="cols">
+<div class="card pad grid">
+<div class="sec-t" style="margin:0">Neue Aktion</div>
+<div class="g2"><label class="field">Kanal<select class="inp" id="mCh" name="mCh"><option selected="" value="mail">E-Mail</option><option value="sms">SMS</option></select></label>
+<label class="field">Empfänger<select class="inp" id="mAud" name="mAud"><option selected="" value="all">Alle Kunden</option><option value="regular">Nur Stammkunden (2+ Buchungen)</option><option value="inactive">Lange nicht gebucht</option></select></label>
+<label class="field">Rabatt<select class="inp" id="mPct" name="mPct"><option value="5">5 %</option><option selected="" value="10">10 %</option><option value="15">15 %</option><option value="20">20 %</option></select></label>
+<label class="field">Code gültig<select class="inp" id="mDays" name="mDays"><option value="14">14 Tage</option><option selected="" value="30">30 Tage</option><option value="60">60 Tage</option><option value="90">90 Tage</option></select></label></div>
+<label class="field">Betreff<input class="inp" id="mSub" name="mSub" value="Ihr Rabatt für die nächste Reise"/></label>
+<label class="field">Text<textarea class="inp" id="mText" name="mText" rows="6">Hallo {vorname},
+
+für Ihre nächste Reise ab Düsseldorf schenken wir Ihnen {rabatt} % Rabatt auf Ihr Parken. Einfach bei der Buchung den Code {code} eingeben – gültig bis {gueltig}.
+
+Ihr Team</textarea><span class="meta">Platzhalter: {vorname} {rabatt} {code} {gueltig}</span></label>
+<div class="banner">88 von 95 Kunden bekommen diese E-Mail · 7 ohne Erlaubnis werden automatisch übersprungen.</div>
+<div class="err" id="mErr"></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn go" id="mSend">88 E-Mails senden (Demo)</button><button class="btn soft" id="mTest">Test an mich</button></div>
+</div>
+<div class="grid">
+<div class="card pad"><div class="sec-t">Vorschau</div>
+<div style="border:1px solid var(--line);border-radius:12px;overflow:hidden"><div style="background:var(--surface-2);padding:10px 12px;font-size:13px"><b>Ihr Rabatt für die nächste Reise</b><div class="meta">an lea.braun@example.de</div></div><div style="padding:12px;white-space:pre-wrap;font-size:14px">Hallo Lea,
+
+für Ihre nächste Reise ab Düsseldorf schenken wir Ihnen 10 % Rabatt auf Ihr Parken. Einfach bei der Buchung den Code ANGEBOT10 eingeben – gültig bis 21.12.2026.
+
+Ihr Team</div><div class="meta" style="padding:0 12px 12px">Keine Werbung mehr? <u>Hier abmelden</u></div></div>
+<div class="meta" style="margin-top:10px">Code <b class="mono">ANGEBOT10</b> wird automatisch angelegt: 10 % bis 21.12.2026.</div></div>
+<div class="card pad"><div class="sec-t">Gesendete Aktionen</div>
+<p class="muted" style="margin:0">Noch keine Aktion gesendet.</p></div>
+</div></div></div>
+</main>
+
+<div class="toast" id="toast" role="status"></div>
+<script src="js/ui.js" defer></script>
+</body>
+</html>

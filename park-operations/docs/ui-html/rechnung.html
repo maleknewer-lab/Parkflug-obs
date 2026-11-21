@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rechnung · Operations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/theme.js"></script>
+</head>
+<body data-page="rechnungen">
+
+<header class="top">
+<button aria-controls="menu" aria-expanded="false" aria-label="Menü öffnen" class="iconbtn" id="menuBtn">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="20"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+</button>
+<div class="logo"><span class="m">P</span>Park Operations</div>
+<span class="crumb" id="crumb">· Rechnung</span>
+<span class="sp"></span>
+<span class="live"><i></i>Flugdaten live · DUS</span>
+<button aria-label="Hell/Dunkel umschalten" class="iconbtn" id="themeBtn">
+<svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+</button>
+<button aria-label="Benutzer" class="avatar" id="meBtn" title="Fawaz (Admin)">FA</button>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<nav class="menu" id="menu" aria-label="Hauptmenü">
+<div class="head"><div class="logo"><span class="m">P</span>Park Operations</div>
+<button aria-label="Menü schließen" class="iconbtn" id="menuClose"><svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="18"><path d="M6 6l12 12M18 6L6 18"></path></svg></button></div>
+<div class="me" id="menuMe"><span class="avatar">FA</span><span style="flex:1;min-width:0"><b>Fawaz</b><div class="meta">Admin</div></span></div>
+<div class="grp">Betrieb</div>
+<a class="on" data-r="uebersicht" href="uebersicht.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="9" rx="2" width="7" x="3" y="3"></rect><rect height="5" rx="2" width="7" x="14" y="3"></rect><rect height="9" rx="2" width="7" x="14" y="12"></rect><rect height="5" rx="2" width="7" x="3" y="16"></rect></svg>Übersicht</a>
+<a data-r="transfers" href="transfers.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M7 4v16M7 20l-3-3M7 20l3-3M17 20V4M17 4l-3 3M17 4l3 3"></path></svg>Transferliste<span class="badge" id="bdgT"></span></a>
+<a data-r="fahrer" href="fahrer.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="20" rx="3" width="10" x="7" y="2"></rect><path d="M11 18h2"></path></svg>Fahrer-App</a>
+<a data-r="kasse" href="kasse.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="13" rx="2" width="20" x="2" y="6"></rect><circle cx="12" cy="12.5" r="2.5"></circle><path d="M6 10v5M18 10v5"></path></svg>Tageskasse</a>
+<div class="grp">Verwaltung</div>
+<a data-r="buchungen" href="buchungen.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="18" rx="2" width="16" x="4" y="3"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg>Buchungen</a>
+<a data-r="kunden" href="kunden.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"></path></svg>Kunden</a>
+<a data-r="marketing" href="marketing.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1zM15 9a3 3 0 0 1 0 6M18 6a7 7 0 0 1 0 12"></path></svg>Angebote senden</a>
+<a data-r="belegung" href="belegung.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="18" rx="3" width="18" x="3" y="3"></rect><path d="M9 17V7h4a3 3 0 0 1 0 6H9"></path></svg>Belegung</a>
+<a class="on" data-r="rechnungen" href="rechnungen.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M6 2h9l5 5v15H6z"></path><path d="M14 2v6h6M9 13h6M9 17h6"></path></svg>Rechnungen</a>
+<a data-r="auswertung" href="auswertung.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg>Auswertung</a>
+<a data-r="tarife" href="tarife.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M20.6 13.4 12 22l-9-9V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"></path><circle cx="7.5" cy="7.5" r="1.5"></circle></svg>Tarife &amp; Preise</a>
+<a data-r="mitarbeiter" href="mitarbeiter.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path><path d="M19 3l2 2-2 2"></path></svg>Mitarbeiter &amp; Rechte</a>
+<div class="grp">Kunde</div>
+<a data-r="buchen" href="buchen.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M12 5v14M5 12h14"></path></svg>Online buchen (Website)</a>
+</nav>
+
+<main id="app">
+<div class="page"><div class="ph"><div><h1>Rechnungen</h1><p>Fortlaufend nummeriert, nie gelöscht – Korrekturen nur per Stornorechnung.</p></div><button class="btn soft" id="ivExp">Monatsexport für Steuerberater</button></div>
+<div class="kpis"><div class="card kpi hero"><span class="l">Umsatz November (brutto)</span><span class="v num">4.765,85 €</span><span class="s">70 Belege</span></div>
+<div class="card kpi"><span class="l">davon USt. 19 %</span><span class="v num">760,94 €</span></div>
+<div class="card kpi"><span class="l">Offen</span><span class="v num">0</span></div>
+<div class="card kpi"><span class="l">Stornorechnungen</span><span class="v num">0</span></div></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap"><input aria-label="Suche" class="inp" id="ivQ" name="ivQ" placeholder="Suchen: Nr., Buchung, Name, Firma" style="max-width:360px" value=""/>
+<div class="seg" id="ivSeg"><button class="on" data-f="alle">Alle</button><button class="" data-f="bezahlt">Bezahlt</button><button class="" data-f="offen">Offen</button><button class="" data-f="storno">Storno</button></div></div>
+<div class="card scroll"><table class="tbl"><thead><tr><th>Nr.</th><th>Datum</th><th>Empfänger</th><th>Buchung</th><th>Status</th><th style="text-align:right">Betrag</th><th></th></tr></thead><tbody>
+<!-- repeat <tr> per item --><tr><td class="mono"><b>2026-000085</b></td><td class="mono">21.11.2026</td><td><b>Noah Becker</b><div class="meta">noah.becker@example.de</div></td><td><a class="lnk code" data-href="buchung.html?code=LZ59N3176" data-open="LZ59N3176" style="cursor:pointer">LZ59N3176</a></td>
+<td><span class="chip ok">bezahlt</span></td>
+<td class="price" style="text-align:right">43,00 €</td><td style="white-space:nowrap"><button class="btn soft sm" data-inv-view="2026-000085">Ansehen</button> <button class="btn soft sm" data-inv-mail="2026-000085">Senden</button></td></tr><tr><td class="mono"><b>2026-000084</b></td><td class="mono">21.11.2026</td><td><b>Paul Neumann</b><div class="meta">paul.neumann@example.de</div></td><td><a class="lnk code" data-href="buchung.html?code=ZTEQF5015" data-open="ZTEQF5015" style="cursor:pointer">ZTEQF5015</a></td>
+<td><span class="chip ok">bezahlt</span></td>
+<td class="price" style="text-align:right">43,00 €</td><td style="white-space:nowrap"><button class="btn soft sm" data-inv-view="2026-000084">Ansehen</button> <button class="btn soft sm" data-inv-mail="2026-000084">Senden</button></td></tr><tr><td class="mono"><b>2026-000083</b></td><td class="mono">21.11.2026</td><td><b>Lea Zimmermann</b><div class="meta">lea.zimmermann@example.de</div></td><td><a class="lnk code" data-href="buchung.html?code=WP4GJ6264" data-open="WP4GJ6264" style="cursor:pointer">WP4GJ6264</a></td>
+<td><span class="chip ok">bezahlt</span></td>
+<td class="price" style="text-align:right">58,30 €</td><td style="white-space:nowrap"><button class="btn soft sm" data-inv-view="2026-000083">Ansehen</button> <button class="btn soft sm" data-inv-mail="2026-000083">Senden</button></td></tr><tr><td class="mono"><b>2026-000082</b></td><td class="mono">19.11.2026</td><td><b>Mia Jansen</b><div class="meta">mia.jansen@example.de</div></td><td><a class="lnk code" data-href="buchung.html?code=PRM8X3756" data-open="PRM8X3756" style="cursor:pointer">PRM8X3756</a></td>
+<td><span class="chip ok">bezahlt</span></td>
+<td class="price" style="text-align:right">61,45 €</td><td style="white-space:nowrap"><button class="btn soft sm" data-inv-view="2026-000082">Ansehen</button> <button class="btn soft sm" data-inv-mail="2026-000082">Senden</button></td></tr><tr><td class="mono"><b>2026-000081</b></td><td class="mono">19.11.2026</td><td><b>Mia Kaya</b><div class="meta">mia.kaya@example.de</div></td><td><a class="lnk code" data-href="buchung.html?code=U3UK99973" data-open="U3UK99973" style="cursor:pointer">U3UK99973</a></td>
+<td><span class="chip ok">bezahlt</span></td>
+<td class="price" style="text-align:right">104,00 €</td><td style="white-space:nowrap"><button class="btn soft sm" data-inv-view="2026-000081">Ansehen</button> <button class="btn soft sm" data-inv-mail="2026-000081">Senden</button></td></tr><tr><td class="mono"><b>2026-000080</b></td><td class="mono">19.11.2026</td><td><b>Ben Neumann</b><div class="meta">ben.neumann@example.de</div></td><td><a class="lnk code" data-href="buchung.html?code=ZSQ7F3029" data-open="ZSQ7F3029" style="cursor:pointer">ZSQ7F3029</a></td>
+<td><span class="chip ok">bezahlt</span></td>
+<td class="price" style="text-align:right">72,45 €</td><td style="white-space:nowrap"><button class="btn soft sm" data-inv-view="2026-000080">Ansehen</button> <button class="btn soft sm" data-inv-mail="2026-000080">Senden</button></td></tr><tr><td class="mono"><b>2026-000079</b></td><td class="mono">19.11.2026</td><td><b>Elias Lange</b><div class="meta">elias.lange@example.de</div></td><td><a class="lnk code" data-href="buchung.html?code=A7N6H2087" data-open="A7N6H2087" style="cursor:pointer">A7N6H2087</a></td>
+<td><span class="chip ok">bezahlt</span></td>
+<td class="price" style="text-align:right">114,45 €</td><td style="white-space:nowrap"><button class="btn soft sm" data-inv-view="2026-000079">Ansehen</button> <button class="btn soft sm" data-inv-mail="2026-000079">Senden</button></td></tr><tr><td class="mono"><b>2026-000078</b></td><td class="mono">18.11.2026</td><td><b>Emma Jansen</b><div class="meta">emma.jansen@example.de</div></td><td><a class="lnk code" data-href="buchung.html?code=EGG3G2234" data-open="EGG3G2234" style="cursor:pointer">EGG3G2234</a></td>
+<td><span class="chip ok">bezahlt</span></td>
+<td class="price" style="text-align:right">77,00 €</td><td style="white-space:nowrap"><button class="btn soft sm" data-inv-view="2026-000078">Ansehen</button> <button class="btn soft sm" data-inv-mail="2026-000078">Senden</button></td></tr></tbody></table></div></div>
+</main>
+<a class="scrim on" id="sheetScrim" href="rechnungen.html" style="z-index:50" aria-label="Schließen"></a>
+<aside class="sheet on" id="sheet" aria-label="Rechnung" data-close-href="rechnungen.html">
+<div class="sh"><div><div style="font-size:18px;font-weight:650">Rechnung 2026-000085</div><div class="meta">Buchung LZ59N3176 · Noah Becker</div></div><span style="flex:1"></span><button aria-label="Schließen" class="iconbtn" id="ivClose">✕</button></div>
+<div class="sb"><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn soft sm" id="ivBack">‹ Zur Buchung</button><button class="btn sm" id="ivPdf">PDF herunterladen</button><button class="btn soft sm" id="ivMail">Per E-Mail senden</button></div>
+<div style="background:#fff;color:#1f2733;border-radius:6px;padding:34px 34px 28px;font-size:13px;line-height:1.5;box-shadow:0 1px 3px rgba(0,0,0,.08);aspect-ratio:1/1.414;max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;justify-content:space-between;gap:16px"><div><div style="font-size:18px;font-weight:700">ParkFlug</div><div style="color:#6b7482">Parken am Flughafen Düsseldorf</div></div>
+<div style="text-align:right;color:#6b7482;font-size:12px">Firmenname GmbH (Platzhalter)<br/>Musterstraße 1<br/>40474 Düsseldorf<br/>info@parkflug.de</div></div>
+<div style="display:flex;justify-content:space-between;gap:16px;align-items:flex-end"><div><div style="font-size:11px;color:#6b7482">Firmenname GmbH (Platzhalter) · Musterstraße 1 · 40474 Düsseldorf</div>
+<div style="margin-top:6px"><b>Noah Becker</b></div></div>
+<div style="text-align:right"><div style="font-size:20px;font-weight:700">Rechnung</div><div>Nr. <b style="font-family:var(--mono)">2026-000085</b></div><div>Datum 21.11.2026</div><div>Buchung LZ59N3176</div></div></div>
+<table style="width:100%;border-collapse:collapse"><thead><tr><th style="text-align:left;border-bottom:1px solid #dfe3e8;padding:6px 0;font-size:12px;color:#6b7482">Leistung</th><th style="text-align:right;border-bottom:1px solid #dfe3e8;padding:6px 0;font-size:12px;color:#6b7482">Betrag</th></tr></thead>
+<tbody><tr><td style="padding:7px 12px 7px 0;border-bottom:1px solid #eef0f3">Shuttle · Außenparkplatz · 3 Tage (19.11. 06:00 – 21.11. 13:30) · Kennzeichen K-VQ 914</td><td style="text-align:right;white-space:nowrap;font-family:var(--mono);border-bottom:1px solid #eef0f3">33,00 €</td></tr><tr><td style="padding:7px 12px 7px 0;border-bottom:1px solid #eef0f3">Zusätzliche Personen (1 × 10,00 €)</td><td style="text-align:right;white-space:nowrap;font-family:var(--mono);border-bottom:1px solid #eef0f3">10,00 €</td></tr></tbody></table>
+<div style="margin-left:auto;min-width:240px;display:grid;grid-template-columns:1fr auto;gap:4px 18px;font-family:var(--mono)"><span style="font-family:var(--font)">Netto</span><span style="text-align:right">36,13 €</span><span style="font-family:var(--font)">USt. 19 %</span><span style="text-align:right">6,87 €</span><b style="font-family:var(--font);border-top:1px solid #1f2733;padding-top:4px">Gesamt</b><b style="text-align:right;border-top:1px solid #1f2733;padding-top:4px">43,00 €</b></div>
+<div>Betrag dankend erhalten (Bar vor Ort). Leistungszeitraum siehe oben.</div>
+<div style="margin-top:auto;border-top:1px solid #dfe3e8;padding-top:10px;font-size:11px;color:#6b7482;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><span>Firmenname GmbH (Platzhalter) · Musterstraße 1, 40474 Düsseldorf</span><span>St.-Nr. 000/000/00000 · USt-IdNr. DE000000000</span><span>IBAN DE00 0000 0000 0000 0000 00</span></div>
+</div><p class="meta" style="margin:0">Demo: Firmendaten sind Platzhalter. Im echten System wird hier eine PDF-Datei erzeugt.</p></div>
+</aside>
+
+<div class="toast" id="toast" role="status"></div>
+<script src="js/ui.js" defer></script>
+</body>
+</html>

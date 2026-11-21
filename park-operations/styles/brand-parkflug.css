@@ -1,0 +1,6 @@
+/* Example brand theme for the public booking page. Load after tokens.css
+   and set <html data-brand="parkflug">. Values are placeholders until the
+   final ParkFlug logo/colours are decided (black/orange). */
+:root[data-brand="parkflug"]{--brand:#1c1c1e;--brand-ink:#ffffff;--brand-soft:#ececec;--accent:#e0731f;--accent-ink:#ffffff;--accent-soft:#fbe9db}
+@media (prefers-color-scheme:dark){:root[data-brand="parkflug"]:not([data-theme="light"]){--brand:#f2f2f2;--brand-ink:#111;--brand-soft:#2a2a2a;--accent:#f0913f;--accent-ink:#1a0d02;--accent-soft:#3a2716}}
+:root[data-brand="parkflug"][data-theme="dark"]{--brand:#f2f2f2;--brand-ink:#111;--brand-soft:#2a2a2a;--accent:#f0913f;--accent-ink:#1a0d02;--accent-soft:#3a2716}

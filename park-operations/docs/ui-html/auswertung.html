@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Auswertung · Operations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/theme.js"></script>
+</head>
+<body data-page="auswertung">
+
+<header class="top">
+<button aria-controls="menu" aria-expanded="false" aria-label="Menü öffnen" class="iconbtn" id="menuBtn">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="20"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+</button>
+<div class="logo"><span class="m">P</span>Park Operations</div>
+<span class="crumb" id="crumb">· Auswertung</span>
+<span class="sp"></span>
+<span class="live"><i></i>Flugdaten live · DUS</span>
+<button aria-label="Hell/Dunkel umschalten" class="iconbtn" id="themeBtn">
+<svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+</button>
+<button aria-label="Benutzer" class="avatar" id="meBtn" title="Fawaz (Admin)">FA</button>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<nav class="menu" id="menu" aria-label="Hauptmenü">
+<div class="head"><div class="logo"><span class="m">P</span>Park Operations</div>
+<button aria-label="Menü schließen" class="iconbtn" id="menuClose"><svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="18"><path d="M6 6l12 12M18 6L6 18"></path></svg></button></div>
+<div class="me" id="menuMe"><span class="avatar">FA</span><span style="flex:1;min-width:0"><b>Fawaz</b><div class="meta">Admin</div></span></div>
+<div class="grp">Betrieb</div>
+<a class="on" data-r="uebersicht" href="uebersicht.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="9" rx="2" width="7" x="3" y="3"></rect><rect height="5" rx="2" width="7" x="14" y="3"></rect><rect height="9" rx="2" width="7" x="14" y="12"></rect><rect height="5" rx="2" width="7" x="3" y="16"></rect></svg>Übersicht</a>
+<a data-r="transfers" href="transfers.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M7 4v16M7 20l-3-3M7 20l3-3M17 20V4M17 4l-3 3M17 4l3 3"></path></svg>Transferliste<span class="badge" id="bdgT"></span></a>
+<a data-r="fahrer" href="fahrer.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="20" rx="3" width="10" x="7" y="2"></rect><path d="M11 18h2"></path></svg>Fahrer-App</a>
+<a data-r="kasse" href="kasse.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="13" rx="2" width="20" x="2" y="6"></rect><circle cx="12" cy="12.5" r="2.5"></circle><path d="M6 10v5M18 10v5"></path></svg>Tageskasse</a>
+<div class="grp">Verwaltung</div>
+<a data-r="buchungen" href="buchungen.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="18" rx="2" width="16" x="4" y="3"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg>Buchungen</a>
+<a data-r="kunden" href="kunden.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"></path></svg>Kunden</a>
+<a data-r="marketing" href="marketing.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1zM15 9a3 3 0 0 1 0 6M18 6a7 7 0 0 1 0 12"></path></svg>Angebote senden</a>
+<a data-r="belegung" href="belegung.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="18" rx="3" width="18" x="3" y="3"></rect><path d="M9 17V7h4a3 3 0 0 1 0 6H9"></path></svg>Belegung</a>
+<a data-r="rechnungen" href="rechnungen.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M6 2h9l5 5v15H6z"></path><path d="M14 2v6h6M9 13h6M9 17h6"></path></svg>Rechnungen</a>
+<a class="on" data-r="auswertung" href="auswertung.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg>Auswertung</a>
+<a data-r="tarife" href="tarife.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M20.6 13.4 12 22l-9-9V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"></path><circle cx="7.5" cy="7.5" r="1.5"></circle></svg>Tarife &amp; Preise</a>
+<a data-r="mitarbeiter" href="mitarbeiter.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path><path d="M19 3l2 2-2 2"></path></svg>Mitarbeiter &amp; Rechte</a>
+<div class="grp">Kunde</div>
+<a data-r="buchen" href="buchen.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M12 5v14M5 12h14"></path></svg>Online buchen (Website)</a>
+</nav>
+
+<main id="app">
+<div class="page"><div class="ph"><div><h1>Auswertung</h1><p>November 2026 · nach Anreisetag</p></div><button class="btn soft" id="exp">Monatsexport für Steuerberater</button></div>
+<div class="card pad" id="tradeStats"><div class="trade-h"><div><div class="l">Umsatz · Börsen-Ansicht · 3M</div><div class="v num">100.156,00 €</div>
+<div class="chg dn">▼ -14,6 % · −17.086,00 € <span class="muted" style="font-weight:500">ggü. Vorperiode</span></div></div>
+<div class="trade-ctl"><div class="seg" data-tr=""><button class="" data-r="1W">1W</button><button class="" data-r="1M">1M</button><button class="on" data-r="3M">3M</button><button class="" data-r="6M">6M</button><button class="" data-r="1J">1J</button></div>
+<div class="seg" data-tm=""><button class="on" data-m="line">Linie</button><button class="" data-m="candle">Kerzen</button></div></div></div>
+<div class="trade-w"><svg aria-label="Umsatzverlauf" role="img" viewbox="0 0 900 300" width="100%"><line stroke-dasharray="" style="stroke:var(--line)" x1="6" x2="838" y1="276.0" y2="276.0"></line><text font-size="11" x="846" y="280.0">546 €</text><line stroke-dasharray="2 4" style="stroke:var(--line)" x1="6" x2="838" y1="209.5" y2="209.5"></line><text font-size="11" x="846" y="213.5">862 €</text><line stroke-dasharray="2 4" style="stroke:var(--line)" x1="6" x2="838" y1="143.0" y2="143.0"></line><text font-size="11" x="846" y="147.0">1,2k €</text><line stroke-dasharray="2 4" style="stroke:var(--line)" x1="6" x2="838" y1="76.5" y2="76.5"></line><text font-size="11" x="846" y="80.5">1,5k €</text><line stroke-dasharray="2 4" style="stroke:var(--line)" x1="6" x2="838" y1="10.0" y2="10.0"></line><text font-size="11" x="846" y="14.0">1,8k €</text><text font-size="11" text-anchor="start" x="6.0" y="294">23.08.</text><text font-size="11" text-anchor="middle" x="144.7" y="294">07.09.</text><text font-size="11" text-anchor="middle" x="283.3" y="294">22.09.</text><text font-size="11" text-anchor="middle" x="422.0" y="294">07.10.</text><text font-size="11" text-anchor="middle" x="560.7" y="294">22.10.</text><text font-size="11" text-anchor="middle" x="699.3" y="294">06.11.</text><text font-size="11" text-anchor="middle" x="838.0" y="294">21.11.</text><defs><lineargradient id="tgtradeStats" x1="0" x2="0" y1="0" y2="1"><stop offset="0" style="stop-color:var(--red);stop-opacity:.28"></stop><stop offset="1" style="stop-color:var(--red);stop-opacity:0"></stop></lineargradient></defs>
+<path d="M6.0 104.1L15.2 125.1L24.5 175.4L33.7 173.1L43.0 129.8L52.2 32.2L61.5 106.2L70.7 87.5L80.0 180.4L89.2 229.4L98.4 233.4L107.7 198.1L116.9 162.1L126.2 170.6L135.4 150.8L144.7 187.0L153.9 226.5L163.2 232.2L172.4 190.7L181.6 155.8L190.9 162.6L200.1 159.2L209.4 222.5L218.6 236.2L227.9 212.6L237.1 173.5L246.4 157.9L255.6 188.2L264.8 136.7L274.1 187.8L283.3 177.1L292.6 174.5L301.8 147.0L311.1 65.8L320.3 111.2L329.6 110.0L338.8 157.1L348.0 198.7L357.3 200.8L366.5 155.0L375.8 33.4L385.0 129.3L394.3 58.2L403.5 128.9L412.8 153.7L422.0 178.1L431.2 137.1L440.5 86.8L449.7 113.1L459.0 97.6L468.2 153.7L477.5 189.3L486.7 216.8L496.0 151.0L505.2 87.5L514.4 149.5L523.7 85.8L532.9 151.6L542.2 173.3L551.4 153.1L560.7 149.9L569.9 34.3L579.2 86.6L588.4 72.3L597.6 164.7L606.9 161.3L616.1 124.7L625.4 104.3L634.6 67.7L643.9 78.2L653.1 179.6L662.4 216.8L671.6 253.8L680.8 237.4L690.1 241.8L699.3 161.9L708.6 176.6L717.8 195.6L727.1 219.8L736.3 245.4L745.6 228.4L754.8 212.4L764.0 161.5L773.3 169.1L782.5 179.0L791.8 201.7L801.0 242.3L810.3 216.8L819.5 203.1L828.8 146.6L838.0 147.4L838.0 276L6.0 276Z" fill="url(#tgtradeStats)"></path><path d="M6.0 89.5L15.2 98.6L24.5 102.4L33.7 105.9L43.0 107.7L52.2 113.9L61.5 120.8L70.7 118.5L80.0 126.4L89.2 134.1L98.4 142.7L107.7 152.5L116.9 171.0L126.2 180.2L135.4 189.3L144.7 190.2L153.9 189.8L163.2 189.6L172.4 188.5L181.6 187.6L190.9 186.5L200.1 187.7L209.4 192.8L218.6 194.2L227.9 191.4L237.1 188.9L246.4 189.2L255.6 192.9L264.8 189.7L274.1 184.7L283.3 176.3L292.6 170.8L301.8 167.0L311.1 153.9L320.3 142.9L329.6 139.1L338.8 134.7L348.0 137.8L357.3 141.5L366.5 142.7L375.8 138.0L385.0 140.6L394.3 133.2L403.5 129.2L412.8 122.8L422.0 119.5L431.2 117.0L440.5 124.6L449.7 122.3L459.0 127.9L468.2 131.5L477.5 136.5L486.7 142.1L496.0 144.1L505.2 144.1L514.4 149.3L523.7 147.7L532.9 147.4L542.2 145.1L551.4 136.0L560.7 135.8L569.9 128.2L579.2 119.2L588.4 117.3L597.6 119.2L606.9 117.5L616.1 113.4L625.4 106.9L634.6 111.7L643.9 110.5L653.1 125.8L662.4 133.2L671.6 146.5L680.8 162.6L690.1 182.2L699.3 195.7L708.6 209.7L717.8 212.0L727.1 212.4L736.3 211.2L745.6 209.9L754.8 205.7L764.0 205.7L773.3 204.6L782.5 202.2L791.8 199.6L801.0 199.2L810.3 197.5L819.5 196.2L828.8 194.1L838.0 191.0" fill="none" opacity=".7" stroke-dasharray="4 3" stroke-width="1.2" style="stroke:var(--muted)"></path><path d="M6.0 104.1L15.2 125.1L24.5 175.4L33.7 173.1L43.0 129.8L52.2 32.2L61.5 106.2L70.7 87.5L80.0 180.4L89.2 229.4L98.4 233.4L107.7 198.1L116.9 162.1L126.2 170.6L135.4 150.8L144.7 187.0L153.9 226.5L163.2 232.2L172.4 190.7L181.6 155.8L190.9 162.6L200.1 159.2L209.4 222.5L218.6 236.2L227.9 212.6L237.1 173.5L246.4 157.9L255.6 188.2L264.8 136.7L274.1 187.8L283.3 177.1L292.6 174.5L301.8 147.0L311.1 65.8L320.3 111.2L329.6 110.0L338.8 157.1L348.0 198.7L357.3 200.8L366.5 155.0L375.8 33.4L385.0 129.3L394.3 58.2L403.5 128.9L412.8 153.7L422.0 178.1L431.2 137.1L440.5 86.8L449.7 113.1L459.0 97.6L468.2 153.7L477.5 189.3L486.7 216.8L496.0 151.0L505.2 87.5L514.4 149.5L523.7 85.8L532.9 151.6L542.2 173.3L551.4 153.1L560.7 149.9L569.9 34.3L579.2 86.6L588.4 72.3L597.6 164.7L606.9 161.3L616.1 124.7L625.4 104.3L634.6 67.7L643.9 78.2L653.1 179.6L662.4 216.8L671.6 253.8L680.8 237.4L690.1 241.8L699.3 161.9L708.6 176.6L717.8 195.6L727.1 219.8L736.3 245.4L745.6 228.4L754.8 212.4L764.0 161.5L773.3 169.1L782.5 179.0L791.8 201.7L801.0 242.3L810.3 216.8L819.5 203.1L828.8 146.6L838.0 147.4" fill="none" stroke-linejoin="round" stroke-width="2" style="stroke:var(--red)"></path><line opacity=".8" stroke-dasharray="3 3" style="stroke:var(--red)" x1="6" x2="838" y1="147.4" y2="147.4"></line><rect height="20" rx="5" style="fill:var(--red)" width="58" x="840" y="137.4"></rect><text font-size="11" font-weight="700" style="fill:var(--accent-ink)" x="846" y="151.4">1,2k €</text>
+<g class="xh" style="display:none"><line class="xv" opacity=".5" stroke-dasharray="3 3" style="stroke:var(--ink)" y1="10" y2="276"></line><line class="xhl" opacity=".35" stroke-dasharray="3 3" style="stroke:var(--ink)" x1="6" x2="838"></line><circle class="xc" r="4.5" stroke-width="2" style="fill:var(--red);stroke:var(--surface)"></circle></g>
+<rect class="hit" fill="transparent" height="266" width="832" x="6" y="10"></rect></svg><div class="tip"></div></div>
+<div class="trade-f"><span>Heute <b>1.157,00 €</b></span><span>Ø pro Tag <b>1.100,62 €</b></span><span>Bester Tag <b>28.08. · 1.705,00 €</b></span><span><i style="display:inline-block;width:14px;border-top:1.5px dashed var(--muted);vertical-align:middle"></i> Ø 7 Tage</span><span class="muted">Demo-Verlauf</span></div></div>
+<div class="kpis"><div class="card kpi hero"><span class="l">Umsatz</span><span class="v num">5.106,73 €</span><span class="s">73 Buchungen</span></div>
+<div class="card kpi"><span class="l">Provision Partner</span><span class="v num">−473,78 €</span></div>
+<div class="card kpi"><span class="l">Netto nach Provision</span><span class="v num">4.632,95 €</span></div>
+<div class="card kpi"><span class="l">Ø Parkdauer</span><span class="v num">9,4 Tage</span></div>
+<div class="card kpi"><span class="l">Ø pro Fahrzeugtag</span><span class="v num">7,42 €</span></div></div>
+<div class="card pad"><div class="sec-t">Umsatz nach Quelle</div><div class="grid" style="gap:12px">
+<div><div style="display:flex;justify-content:space-between;gap:10px;font-size:14px;margin-bottom:5px"><b>X-Park</b><span class="mono">2.565,85 € · 38 Buchungen</span></div>
+<div style="height:10px;border-radius:99px;background:var(--surface-2);overflow:hidden"><div style="height:100%;width:100.0%;background:var(--accent);border-radius:99px"></div></div></div><div><div style="display:flex;justify-content:space-between;gap:10px;font-size:14px;margin-bottom:5px"><b>Parkos</b><span class="mono">994,23 € · 13 Buchungen · Provision 198,85 €</span></div>
+<div style="height:10px;border-radius:99px;background:var(--surface-2);overflow:hidden"><div style="height:100%;width:38.7%;background:var(--brand);border-radius:99px"></div></div></div><div><div style="display:flex;justify-content:space-between;gap:10px;font-size:14px;margin-bottom:5px"><b>Parkplatzvergleich</b><span class="mono">734,15 € · 10 Buchungen · Provision 110,12 €</span></div>
+<div style="height:10px;border-radius:99px;background:var(--surface-2);overflow:hidden"><div style="height:100%;width:28.6%;background:var(--brand);border-radius:99px"></div></div></div><div><div style="display:flex;justify-content:space-between;gap:10px;font-size:14px;margin-bottom:5px"><b>Ich-Parke-Billiger</b><span class="mono">547,40 € · 7 Buchungen · Provision 98,53 €</span></div>
+<div style="height:10px;border-radius:99px;background:var(--surface-2);overflow:hidden"><div style="height:100%;width:21.3%;background:var(--brand);border-radius:99px"></div></div></div><div><div style="display:flex;justify-content:space-between;gap:10px;font-size:14px;margin-bottom:5px"><b>Holiday Extras</b><span class="mono">265,10 € · 5 Buchungen · Provision 66,28 €</span></div>
+<div style="height:10px;border-radius:99px;background:var(--surface-2);overflow:hidden"><div style="height:100%;width:10.3%;background:var(--brand);border-radius:99px"></div></div></div></div></div></div>
+</main>
+
+<div class="toast" id="toast" role="status"></div>
+<script src="js/ui.js" defer></script>
+</body>
+</html>

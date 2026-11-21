@@ -1,0 +1,488 @@
+// Core data model — Phase 1. See CLAUDE.md §4.
+// Money is stored in integer cents. All prices/rules are data per brand/rate, never hard-coded.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ───────── Enums ─────────
+enum Role {
+  admin
+  dispo
+  fahrer
+}
+
+enum Service {
+  SHUTTLE
+  VALET
+}
+
+enum LotType {
+  GARAGE // Parkhaus
+  OUTDOOR // Außenparkplatz (valet cars are parked here)
+}
+
+enum BookingStatus {
+  unconfirmed
+  confirmed
+  cancelled
+}
+
+enum TransferStatus {
+  expected
+  arrived_at_lot
+  taken_to_airport
+  waiting_for_pickup
+  back_at_lot
+  departed
+}
+
+enum PaymentMethod {
+  CASH
+  EC
+  ONLINE // Stripe
+  PARTNER
+}
+
+enum BookingSource {
+  WEBSITE
+  PHONE
+  PARTNER_PORTAL
+  XPARK
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  REFUNDED
+  FAILED
+}
+
+enum DiscountKind {
+  FIXED
+  PERCENT
+}
+
+enum InvoiceKind {
+  INVOICE
+  STORNO
+}
+
+enum CashEntryKind {
+  PAYMENT
+  HANDOVER // cash handed over to the office
+}
+
+enum MessageChannel {
+  EMAIL
+  SMS
+}
+
+// ───────── Brands, lots, rates ─────────
+model Brand {
+  id    String  @id @default(cuid())
+  slug  String  @unique // parkflug, dus-valet …
+  name  String
+  domain String?
+  logoUrl String?
+  colors Json? // { brand, accent, … } for the public booking page
+  emailSender String?
+  termsUrl String?
+  invoiceSender Json? // company, address, taxNo, vatId, bank — filled in Phase 5
+  active Boolean @default(true)
+
+  // Persons & child seats (CHANGES.md, 2026-11-21)
+  personsIncluded     Int     @default(3)
+  extraPersonPriceCents Int   @default(1000)
+  kidsCountAsPerson   Boolean @default(true)
+  seatsEnabled        Boolean @default(true)
+  seatPriceCents      Int     @default(0)
+
+  // Rules (ParkFlug seed values; configurable per brand)
+  minLeadHours        Int @default(2)
+  freeCancelHours     Int @default(24)
+  oversizeSurchargePct Int @default(25)
+  overstayFeeGarageCents  Int @default(2000)
+  overstayFeeOutdoorCents Int @default(1500)
+  vatRateBp           Int @default(1900) // basis points; keep configurable (open question)
+  openingFloatCents   Int @default(15000) // Wechselgeld
+
+  locations Location[]
+  rates     Rate[]
+  seasons   Season[]
+  extras    Extra[]
+  coupons   Coupon[]
+  bookings  Booking[]
+  invoices  Invoice[]
+  users     User[]
+}
+
+model Location {
+  id      String  @id @default(cuid())
+  brandId String
+  brand   Brand   @relation(fields: [brandId], references: [id])
+  name    String
+  type    LotType
+  capacity Int    @default(0)
+  spaces  ParkingSpace[]
+  rates   Rate[]
+
+  @@index([brandId])
+}
+
+model ParkingSpace {
+  id         String   @id @default(cuid())
+  locationId String
+  location   Location @relation(fields: [locationId], references: [id])
+  label      String
+  bookings   Booking[]
+
+  @@unique([locationId, label])
+}
+
+model Rate {
+  id         String   @id @default(cuid())
+  brandId    String
+  brand      Brand    @relation(fields: [brandId], references: [id])
+  locationId String
+  location   Location @relation(fields: [locationId], references: [id])
+  name       String
+  service    Service
+  lotType    LotType
+  active     Boolean  @default(true)
+  sort       Int      @default(0)
+
+  // Optional overrides of the brand's person/seat settings
+  personsIncluded       Int?
+  extraPersonPriceCents Int?
+  seatPriceCents        Int?
+
+  priceTables PriceTable[]
+  bookings    Booking[]
+
+  @@index([brandId])
+}
+
+model Season {
+  id       String  @id @default(cuid())
+  brandId  String
+  brand    Brand   @relation(fields: [brandId], references: [id])
+  name     String
+  color    String?
+  active   Boolean @default(true)
+  priority Int     @default(0) // higher wins if seasons overlap
+  ranges   SeasonRange[]
+  priceTables PriceTable[]
+
+  @@index([brandId])
+}
+
+model SeasonRange {
+  id       String   @id @default(cuid())
+  seasonId String
+  season   Season   @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  startDate DateTime @db.Date
+  endDate   DateTime @db.Date
+}
+
+// seasonId = null → base price list (valid all year)
+model PriceTable {
+  id        String  @id @default(cuid())
+  rateId    String
+  rate      Rate    @relation(fields: [rateId], references: [id], onDelete: Cascade)
+  seasonId  String?
+  season    Season? @relation(fields: [seasonId], references: [id])
+  dayPriceCents Int[] // index 0 = 1 day … index 29 = 30 days
+  extraDayCents Int   // price per day beyond 30
+
+  // NOTE: Postgres allows several NULL seasonId rows; the app must keep one base table per rate.
+  @@unique([rateId, seasonId])
+}
+
+model Extra {
+  id         String  @id @default(cuid())
+  brandId    String
+  brand      Brand   @relation(fields: [brandId], references: [id])
+  name       String
+  priceCents Int
+  active     Boolean @default(true)
+  bookingExtras BookingExtra[]
+}
+
+model Coupon {
+  id         String   @id @default(cuid())
+  brandId    String?
+  brand      Brand?   @relation(fields: [brandId], references: [id])
+  code       String   @unique
+  kind       DiscountKind
+  value      Int // cents for FIXED, percent for PERCENT
+  validFrom  DateTime?
+  validUntil DateTime?
+  source     String? // campaign name
+  active     Boolean  @default(true)
+  bookings   Booking[]
+}
+
+// ───────── Customers & bookings ─────────
+model Customer {
+  id        String  @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String
+  phone     String?
+  company   String?
+  internalNote String?
+
+  // Marketing consent (UWG §7 / DSGVO) — used from Phase 7, stored from day one
+  emailOptOutAt    DateTime?
+  smsOptInAt       DateTime?
+  smsOptInSource   String?
+  smsOptOutAt      DateTime?
+
+  createdAt DateTime @default(now())
+  bookings  Booking[]
+  messages  Message[]
+
+  @@index([email])
+  @@index([lastName])
+}
+
+model Booking {
+  id      String @id @default(cuid())
+  code    String @unique // 9 characters, e.g. KTOYG1199; also in the QR code
+  brandId String
+  brand   Brand  @relation(fields: [brandId], references: [id])
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+  rateId  String
+  rate    Rate   @relation(fields: [rateId], references: [id])
+
+  status         BookingStatus  @default(unconfirmed)
+  transferStatus TransferStatus @default(expected)
+
+  arrivalAt   DateTime
+  departureAt DateTime
+  outboundFlight String?
+  returnFlight   String?
+
+  // Persons & child seats: persons = adults + kids
+  adults    Int @default(1)
+  kids      Int @default(0)
+  seatBaby  Int @default(0) // Babyschale 0–15 Monate
+  seatKind  Int @default(0) // Kindersitz 1–4 Jahre
+  seatBoost Int @default(0) // Sitzerhöhung 4–12 Jahre
+
+  plate    String
+  vehicle  String?
+  oversize Boolean @default(false)
+
+  priceCents    Int
+  paid          Boolean       @default(false)
+  paymentMethod PaymentMethod?
+  couponId      String?
+  coupon        Coupon?       @relation(fields: [couponId], references: [id])
+
+  customerNote String? // written by the customer
+  internalNote String? // staff only — never shown to the customer
+
+  spaceId String?
+  space   ParkingSpace? @relation(fields: [spaceId], references: [id])
+
+  // Business customers (printed on the invoice)
+  billingCompany String?
+  billingContact String? // "z. Hd."
+  billingAddress String?
+  billingVatId   String?
+
+  // Channel
+  source        BookingSource @default(WEBSITE)
+  externalRef   String? // portal / X-Park booking number
+  commissionCents Int? // reporting only
+
+  rebookedFromId String?
+  rebookedFrom   Booking?  @relation("Rebook", fields: [rebookedFromId], references: [id])
+  rebookings     Booking[] @relation("Rebook")
+
+  arrivalDriverId String?
+  arrivalDriver   User? @relation("ArrivalDriver", fields: [arrivalDriverId], references: [id])
+  pickupDriverId  String?
+  pickupDriver    User? @relation("PickupDriver", fields: [pickupDriverId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  extras    BookingExtra[]
+  payments  Payment[]
+  handover  HandoverProtocol?
+  invoices  Invoice[]
+  cashEntries CashEntry[]
+  messages  Message[]
+  activity  ActivityLog[]
+
+  @@index([brandId, arrivalAt])
+  @@index([brandId, departureAt])
+  @@index([plate])
+  @@index([status])
+}
+
+model BookingExtra {
+  id        String  @id @default(cuid())
+  bookingId String
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  extraId   String
+  extra     Extra   @relation(fields: [extraId], references: [id])
+  quantity  Int     @default(1)
+  priceCents Int
+}
+
+model Payment {
+  id        String @id @default(cuid())
+  bookingId String
+  booking   Booking @relation(fields: [bookingId], references: [id])
+  method    PaymentMethod
+  status    PaymentStatus @default(PENDING)
+  amountCents   Int
+  refundedCents Int @default(0)
+  stripePaymentIntentId String? @unique
+  receivedById String?
+  receivedBy   User?  @relation(fields: [receivedById], references: [id])
+  paidAt    DateTime?
+  createdAt DateTime @default(now())
+}
+
+model HandoverProtocol {
+  id        String  @id @default(cuid())
+  bookingId String  @unique
+  booking   Booking @relation(fields: [bookingId], references: [id])
+  mileage   Int?
+  photoUrls String[]
+  signatureUrl String?
+  createdById  String
+  createdBy    User    @relation(fields: [createdById], references: [id])
+  createdAt DateTime @default(now())
+  emailedAt DateTime?
+}
+
+// ───────── Invoices (GoBD) — logic comes in Phase 5 ─────────
+model Invoice {
+  id      String @id @default(cuid())
+  number  String @unique // 2026-000001, sequential, never deleted
+  kind    InvoiceKind @default(INVOICE)
+  brandId String
+  brand   Brand  @relation(fields: [brandId], references: [id])
+  bookingId String
+  booking   Booking @relation(fields: [bookingId], references: [id])
+  originalInvoiceId String? // set on STORNO
+  originalInvoice   Invoice?  @relation("Storno", fields: [originalInvoiceId], references: [id])
+  stornos           Invoice[] @relation("Storno")
+  netCents   Int
+  vatCents   Int
+  grossCents Int // negative on STORNO
+  lines      Json
+  issuedAt   DateTime @default(now())
+  sentAt     DateTime?
+  paidAt     DateTime?
+  pdfPath    String?
+}
+
+model InvoiceCounter {
+  year Int @id
+  last Int @default(0)
+}
+
+// ───────── Cash register ─────────
+model CashEntry {
+  id        String @id @default(cuid())
+  kind      CashEntryKind @default(PAYMENT)
+  method    PaymentMethod // CASH or EC
+  amountCents Int
+  bookingId String?
+  booking   Booking? @relation(fields: [bookingId], references: [id])
+  userId    String
+  user      User @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
+
+// Never edited after creation (GoBD); corrections are new entries.
+model CashClosing {
+  id          String @id @default(cuid())
+  date        DateTime @db.Date
+  openingFloatCents Int
+  expectedCents Int
+  countedCents  Int
+  differenceCents Int
+  userId      String
+  user        User @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@index([date])
+}
+
+// ───────── Messages, staff, attendance, audit ─────────
+model Message {
+  id         String @id @default(cuid())
+  channel    MessageChannel
+  to         String
+  subject    String?
+  body       String
+  status     String @default("queued")
+  bookingId  String?
+  booking    Booking?  @relation(fields: [bookingId], references: [id])
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  sentAt     DateTime?
+  createdAt  DateTime @default(now())
+}
+
+model User {
+  id           String  @id @default(cuid())
+  email        String  @unique // stored lower-case
+  name         String
+  passwordHash String
+  role         Role
+  active       Boolean @default(true)
+  allBrands    Boolean @default(true)
+  brands       Brand[]
+  createdAt    DateTime @default(now())
+
+  shifts       Shift[]
+  cashEntries  CashEntry[]
+  cashClosings CashClosing[]
+  payments     Payment[]
+  protocols    HandoverProtocol[]
+  arrivalBookings Booking[] @relation("ArrivalDriver")
+  pickupBookings  Booking[] @relation("PickupDriver")
+  activity     ActivityLog[]
+}
+
+model Shift {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  startedAt DateTime @default(now())
+  endedAt   DateTime?
+
+  @@index([userId, startedAt])
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  bookingId String?
+  booking   Booking? @relation(fields: [bookingId], references: [id])
+  entity    String
+  entityId  String
+  action    String
+  changes   Json? // { field: { from, to } }
+  createdAt DateTime @default(now())
+
+  @@index([entity, entityId])
+}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="de" data-brand="parkflug">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buchung bestätigt · ParkFlug</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/brand-parkflug.css">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/theme.js"></script>
+</head>
+<body data-page="public">
+<header class="top pub-top"><div class="logo"><span class="m">P</span>ParkFlug</div><span class="sp"></span><button aria-label="Hell/Dunkel umschalten" class="iconbtn" id="themeBtn">
+<svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+</button></header>
+<main id="app">
+<div class="page"><div class="card pad done-card"><span class="chip ok"><i></i>Buchung bestätigt</span><h1>Danke, Max!</h1><div class="muted">Ihre Buchungsnummer</div><div class="big">QP5MU4070</div>
+<img alt="QR-Code" class="qr" height="180" src="img/qr-placeholder.svg" width="180"/><div class="muted">Shuttle · Parkhaus · 26.11.2026 06:30 bis 03.12.2026 · 57,00 € (Online)</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><a class="btn" href="/manage/{{code}}">Buchung ansehen / stornieren</a><a class="btn soft" href="buchen.html">Neue Buchung</a></div></div></div>
+</main>
+<div class="toast" id="toast" role="status"></div>
+<script src="js/ui.js" defer></script>
+</body>
+</html>

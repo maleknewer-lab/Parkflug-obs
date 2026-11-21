@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transferliste · Operations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/app.css">
+<script src="js/theme.js"></script>
+</head>
+<body data-page="transfers">
+
+<header class="top">
+<button aria-controls="menu" aria-expanded="false" aria-label="Menü öffnen" class="iconbtn" id="menuBtn">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="20"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+</button>
+<div class="logo"><span class="m">P</span>Park Operations</div>
+<span class="crumb" id="crumb">· Transferliste</span>
+<span class="sp"></span>
+<span class="live"><i></i>Flugdaten live · DUS</span>
+<button aria-label="Hell/Dunkel umschalten" class="iconbtn" id="themeBtn">
+<svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+</button>
+<button aria-label="Benutzer" class="avatar" id="meBtn" title="Fawaz (Admin)">FA</button>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<nav class="menu" id="menu" aria-label="Hauptmenü">
+<div class="head"><div class="logo"><span class="m">P</span>Park Operations</div>
+<button aria-label="Menü schließen" class="iconbtn" id="menuClose"><svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="18"><path d="M6 6l12 12M18 6L6 18"></path></svg></button></div>
+<div class="me" id="menuMe"><span class="avatar">FA</span><span style="flex:1;min-width:0"><b>Fawaz</b><div class="meta">Admin</div></span></div>
+<div class="grp">Betrieb</div>
+<a class="on" data-r="uebersicht" href="uebersicht.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="9" rx="2" width="7" x="3" y="3"></rect><rect height="5" rx="2" width="7" x="14" y="3"></rect><rect height="9" rx="2" width="7" x="14" y="12"></rect><rect height="5" rx="2" width="7" x="3" y="16"></rect></svg>Übersicht</a>
+<a class="on" data-r="transfers" href="transfers.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M7 4v16M7 20l-3-3M7 20l3-3M17 20V4M17 4l-3 3M17 4l3 3"></path></svg>Transferliste<span class="badge" id="bdgT"></span></a>
+<a data-r="fahrer" href="fahrer.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="20" rx="3" width="10" x="7" y="2"></rect><path d="M11 18h2"></path></svg>Fahrer-App</a>
+<a data-r="kasse" href="kasse.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="13" rx="2" width="20" x="2" y="6"></rect><circle cx="12" cy="12.5" r="2.5"></circle><path d="M6 10v5M18 10v5"></path></svg>Tageskasse</a>
+<div class="grp">Verwaltung</div>
+<a data-r="buchungen" href="buchungen.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="18" rx="2" width="16" x="4" y="3"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg>Buchungen</a>
+<a data-r="kunden" href="kunden.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"></path></svg>Kunden</a>
+<a data-r="marketing" href="marketing.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1zM15 9a3 3 0 0 1 0 6M18 6a7 7 0 0 1 0 12"></path></svg>Angebote senden</a>
+<a data-r="belegung" href="belegung.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><rect height="18" rx="3" width="18" x="3" y="3"></rect><path d="M9 17V7h4a3 3 0 0 1 0 6H9"></path></svg>Belegung</a>
+<a data-r="rechnungen" href="rechnungen.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M6 2h9l5 5v15H6z"></path><path d="M14 2v6h6M9 13h6M9 17h6"></path></svg>Rechnungen</a>
+<a data-r="auswertung" href="auswertung.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg>Auswertung</a>
+<a data-r="tarife" href="tarife.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M20.6 13.4 12 22l-9-9V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"></path><circle cx="7.5" cy="7.5" r="1.5"></circle></svg>Tarife &amp; Preise</a>
+<a data-r="mitarbeiter" href="mitarbeiter.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path><path d="M19 3l2 2-2 2"></path></svg>Mitarbeiter &amp; Rechte</a>
+<div class="grp">Kunde</div>
+<a data-r="buchen" href="buchen.html"><svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M12 5v14M5 12h14"></path></svg>Online buchen (Website)</a>
+</nav>
+
+<main id="app">
+<div class="page">
+<div class="ph"><div><h1>Transferliste</h1><p>Samstag, 21. November 2026</p></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+<button aria-label="Vorheriger Tag" class="iconbtn" id="tPrev">‹</button><input aria-label="Datum" class="inp" id="tDate" name="tDate" style="width:auto" type="date" value="2026-11-21"/><button aria-label="Nächster Tag" class="iconbtn" id="tNext">›</button>
+<div class="seg" id="tSeg"><button class="on" data-f="alle">Alle</button><button class="" data-f="offen">Offen</button><button class="" data-f="hinweise">Mit Hinweis</button></div></div></div>
+<div class="banner warn" style="background:var(--amber-soft);color:var(--amber)">32 Personen offen (davon 3 Kinder) · Bitte bereitstellen: 1× Babyschale</div>
+<div class="card pad" id="tTiles" style="display:grid;gap:10px"><div><div class="fcap">Service</div><div class="ctiles"><button class="ctile on" data-svc="alle"><span class="l">Alle Services</span><span class="n num">25</span><span class="s">11 An · 14 Ab</span></button><button class="ctile" data-svc="Shuttle"><span class="l">Shuttle</span><span class="n num">20</span><span class="s">9 An · 11 Ab</span></button><button class="ctile" data-svc="Valet"><span class="l">Valet</span><span class="n num">5</span><span class="s">2 An · 3 Ab</span></button></div></div><div><div class="fcap">Stellplatz</div><div class="ctiles"><button class="ctile on" data-lot="alle"><span class="l">Alle Plätze</span><span class="n num">25</span><span class="s">11 An · 14 Ab</span></button><button class="ctile" data-lot="parkhaus"><span class="l">Parkhaus</span><span class="n num">13</span><span class="s">5 An · 8 Ab</span></button><button class="ctile" data-lot="aussen"><span class="l">Außenparkplatz</span><span class="n num">12</span><span class="s">6 An · 6 Ab</span></button></div></div></div>
+<div class="card"><div class="pad" style="padding-bottom:6px"><div class="sec-t" style="margin:0"><span>Ankommende Kunden</span> <span class="chip">11</span></div></div><div class="trow done">
+<div><span class="dirdot in">↗</span><div class="time">04:00<small>Ankunft</small></div></div>
+<div class="who"><span class="n" data-open="HAE8X2881">Elif Vogel</span><a class="tel" href="tel:+491726151690"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 172 6151690</a></div>
+<div class="c3"><span class="plate">SG-HM 49</span><div class="meta" style="margin-top:6px">2 Erw. + 1 Kind · Shuttle · Platz P3-48</div><div style="margin-top:4px"><span class="chip warn" title="Bitte bereitstellen">1× Babyschale</span></div></div>
+<div class="c4"><span class="chip">Keine Flugdaten</span><div class="meta" style="margin-top:6px"><span class="price paid">44,10 €</span>Online · bezahlt</div></div>
+<div class="act"><span class="chip ok"><i></i>Eingecheckt</span></div>
+<div class="notes"><div class="note cust"><b>Kunde:</b><span>Buggy und Babytasche dabei</span></div></div>
+</div><div class="trow done">
+<div><span class="dirdot in">↗</span><div class="time">06:30<small>Ankunft</small></div></div>
+<div class="who"><span class="n" data-open="DSU5B9391">Lina Hoffmann</span><a class="tel" href="tel:+491751265541"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 175 1265541</a></div>
+<div class="c3"><span class="plate">DO-MO 240</span><div class="meta" style="margin-top:6px">2 Erw. + 2 Kinder · Shuttle · Platz P2-52</div></div>
+<div class="c4"><span class="chip"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="14"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg><span class="mono">FR5184</span> · Abflug 08:45</span><div class="meta" style="margin-top:6px"><span class="price paid">73,00 €</span>Parkos · bezahlt</div></div>
+<div class="act"><span class="chip ok"><i></i>Eingecheckt</span></div>
+<div class="notes"><div class="note int"><b>Intern:</b><span>Elektroauto – an Ladesäule P1 stellen</span></div></div>
+</div><div class="trow done">
+<div><span class="dirdot in">↗</span><div class="time">10:15<small>Ankunft</small></div></div>
+<div class="who"><span class="n" data-open="L6W5X8311">Leon Zimmermann</span><a class="tel" href="tel:+491773376615"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 177 3376615</a></div>
+<div class="c3"><span class="plate">K-UP 145</span><div class="meta" style="margin-top:6px">1 Pers. · Shuttle · Platz P3-54</div></div>
+<div class="c4"><span class="chip"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="14"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg><span class="mono">EW5979</span> · Abflug 13:00</span><div class="meta" style="margin-top:6px"><span class="price paid">72,45 €</span>Online · bezahlt</div></div>
+<div class="act"><span class="chip ok"><i></i>Eingecheckt</span></div>
+<div class="notes"><div class="note int"><b>Intern:</b><span>Kratzer hinten links schon vorhanden (Foto 12.11.)</span></div></div>
+</div><div class="trow done">
+<div><span class="dirdot in">↗</span><div class="time">10:30<small>Ankunft</small></div></div>
+<div class="who"><span class="n" data-open="2JSEG3666">Leon Wagner</span><a class="tel" href="tel:+491786448621"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 178 6448621</a></div>
+<div class="c3"><span class="plate">BO-JM 481</span><div class="meta" style="margin-top:6px">3 Pers. · Shuttle · Platz P4-20</div></div>
+<div class="c4"><span class="chip"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="14"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg><span class="mono">VY4957</span> · Abflug 13:00</span><div class="meta" style="margin-top:6px"><span class="price paid">47,25 €</span>Online · bezahlt</div></div>
+<div class="act"><span class="chip ok"><i></i>Eingecheckt</span></div>
+<div class="notes"><div class="note cust"><b>Kunde:</b><span>Komme evtl. 20 Min. später</span></div></div>
+</div><div class="trow done">
+<div><span class="dirdot in">↗</span><div class="time">12:15<small>Ankunft</small></div></div>
+<div class="who"><span class="n" data-open="HM24P6953">Felix Klein</span><a class="tel" href="tel:+491757130836"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 175 7130836</a></div>
+<div class="c3"><span class="plate">DU-UC 180</span><div class="meta" style="margin-top:6px">1 Pers. · Shuttle · Platz P2-33</div></div>
+<div class="c4"><span class="chip">Keine Flugdaten</span><div class="meta" style="margin-top:6px"><span class="price paid">76,65 €</span>Online · bezahlt</div></div>
+<div class="act"><span class="chip ok"><i></i>Eingecheckt</span></div>
+</div><div class="trow done">
+<div><span class="dirdot in">↗</span><div class="time">13:30<small>Ankunft</small></div></div>
+<div class="who"><span class="n" data-open="V8R5V7680">Tim Zimmermann</span><a class="tel" href="tel:+491714329268"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 171 4329268</a></div>
+<div class="c3"><span class="plate">D-QO 870</span><div class="meta" style="margin-top:6px">2 Pers. · Shuttle · Platz P4-27</div></div>
+<div class="c4"><span class="chip">Keine Flugdaten</span><div class="meta" style="margin-top:6px"><span class="price cash">50,40 €</span>bar kassieren</div></div>
+<div class="act"><span class="chip ok"><i></i>Eingecheckt</span></div>
+</div><div class="trow done">
+<div><span class="dirdot in">↗</span><div class="time">14:45<small>Ankunft</small></div></div>
+<div class="who"><span class="n" data-open="MQV4J6385">Hannah Jansen</span><a class="tel" href="tel:+491715225208"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 171 5225208</a></div>
+<div class="c3"><span class="plate">BO-CA 246</span><div class="meta" style="margin-top:6px">3 Pers. · Shuttle · Platz P1-58</div></div>
+<div class="c4"><span class="chip"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="14"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg><span class="mono">DE4165</span> · Abflug 16:45</span><div class="meta" style="margin-top:6px"><span class="price paid">64,05 €</span>Parkos · bezahlt</div></div>
+<div class="act"><span class="chip ok"><i></i>Eingecheckt</span></div>
+<div class="notes"><div class="note int"><b>Intern:</b><span>Elektroauto – an Ladesäule P1 stellen</span></div></div>
+</div><div class="trow done">
+<div><span class="dirdot in">↗</span><div class="time">15:00<small>Ankunft</small></div></div>
+<div class="who"><span class="n" data-open="MYRDD3350">Felix Zimmermann</span><a class="tel" href="tel:+491778212620"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 177 8212620</a></div>
+<div class="c3"><span class="plate">BO-XC 562</span><div class="meta" style="margin-top:6px">4 Pers. · Valet · Platz P2-50</div></div>
+<div class="c4"><span class="chip"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="14"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg><span class="mono">LH8594</span> · Abflug 17:15</span><div class="meta" style="margin-top:6px"><span class="price paid">82,45 €</span>Online · bezahlt</div></div>
+<div class="act"><span class="chip ok"><i></i>Eingecheckt</span></div>
+</div><div class="trow done">
+<div><span class="dirdot in">↗</span><div class="time">18:45<small>Ankunft</small></div></div>
+<div class="who"><span class="n" data-open="A7N6H2087">Elias Lange</span><a class="tel" href="tel:+491738835007"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 173 8835007</a></div>
+<div class="c3"><span class="plate">KR-DB 907</span><div class="meta" style="margin-top:6px">3 Pers. · Valet · Platz P4-25</div></div>
+<div class="c4"><span class="chip"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="14"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg><span class="mono">DE6327</span> · Abflug 21:30</span><div class="meta" style="margin-top:6px"><span class="price paid">114,45 €</span>Online · bezahlt</div></div>
+<div class="act"><span class="chip ok"><i></i>Eingecheckt</span></div>
+<div class="notes"><div class="note cust"><b>Kunde:</b><span>Skiausrüstung für 3 Personen</span></div></div>
+</div><div class="trow done">
+<div><span class="dirdot in">↗</span><div class="time">19:30<small>Ankunft</small></div></div>
+<div class="who"><span class="n" data-open="DQSBR5305">Anna Hoffmann</span><a class="tel" href="tel:+491723321921"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 172 3321921</a></div>
+<div class="c3"><span class="plate">E-LF 981</span><div class="meta" style="margin-top:6px">3 Pers. · Shuttle · Platz P4-59</div></div>
+<div class="c4"><span class="chip"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="14"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg><span class="mono">FR5722</span> · Abflug 21:45</span><div class="meta" style="margin-top:6px"><span class="price paid">63,00 €</span>Parkplatzvergleich · bezahlt</div></div>
+<div class="act"><span class="chip ok"><i></i>Eingecheckt</span></div>
+</div><div class="trow done">
+<div><span class="dirdot in">↗</span><div class="time">19:45<small>Ankunft</small></div></div>
+<div class="who"><span class="n" data-open="B3KXW9551">Marie Jansen</span><a class="tel" href="tel:+491751577777"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 175 1577777</a></div>
+<div class="c3"><span class="plate">DU-FS 61</span><div class="meta" style="margin-top:6px">1 Pers. · Shuttle · Platz P1-06</div></div>
+<div class="c4"><span class="chip"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="14"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg><span class="mono">EW7828</span> · Abflug 22:00</span><div class="meta" style="margin-top:6px"><span class="price paid">64,05 €</span>Ich-Parke-Billiger · bezahlt</div></div>
+<div class="act"><span class="chip ok"><i></i>Eingecheckt</span></div>
+</div></div>
+<div class="card"><div class="pad" style="padding-bottom:6px"><div class="sec-t" style="margin:0"><span>Abholungen (Rückkehr)</span> <span class="chip">14</span></div></div><div class="trow late">
+<div><span class="dirdot out">↘</span><div class="time">20.11.<small>Landung</small></div></div>
+<div class="who"><span class="n" data-open="EA6AC7594">Elias Klein</span><a class="tel" href="tel:+491703618178"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 170 3618178</a></div>
+<div class="c3"><span class="plate">DU-QB 206</span><div class="meta" style="margin-top:6px">4 Pers. · Valet · Platz P4-51</div></div>
+<div class="c4"><span class="chip ok"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="14"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg><span class="mono">FR5825</span> · Gelandet 22:50</span><div class="meta" style="margin-top:6px"><span class="price cash">87,70 €</span>bar kassieren</div></div>
+<div class="act"><button class="btn sm stop" data-ck="EA6AC7594">Check-out</button></div>
+<div class="notes"><div class="note int"><b>Intern:</b><span>Kunde nicht erreichbar – erneut anrufen</span></div></div>
+</div><div class="trow done">
+<div><span class="dirdot out">↘</span><div class="time">05:30<small>Landung</small></div></div>
+<div class="who"><span class="n" data-open="ZBDCD6434">Sofia Schmitz</span><a class="tel" href="tel:+491701968463"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 170 1968463</a></div>
+<div class="c3"><span class="plate">NE-JN 175</span><div class="meta" style="margin-top:6px">2 Pers. · Shuttle · Platz P2-44</div></div>
+<div class="c4"><span class="chip ok"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="14"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg><span class="mono">LH8066</span> · Gelandet 05:55</span><div class="meta" style="margin-top:6px"><span class="price paid">87,15 €</span>Parkos · bezahlt</div></div>
+<div class="act"><span class="chip ok"><i></i>Ausgecheckt</span></div>
+<div class="notes"><div class="note int"><b>Intern:</b><span>Stammkunde – immer freundlich, gern Platz vorne</span></div></div>
+</div><div class="trow done">
+<div><span class="dirdot out">↘</span><div class="time">08:10<small>Landung</small></div></div>
+<div class="who"><span class="n" data-open="KWQZ36058">Hannah Hoffmann</span><a class="tel" href="tel:+491731668041"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 173 1668041</a></div>
+<div class="c3"><span class="plate">DO-CA 100</span><div class="meta" style="margin-top:6px">1 Erw. + 1 Kind · Shuttle · Platz P2-58</div><div style="margin-top:4px"><span class="chip warn" title="Bitte bereitstellen">1× Sitzerhöhung</span></div></div>
+<div class="c4"><span class="chip ok"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="14"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg><span class="mono">XQ8976</span> · Gelandet 08:22</span><div class="meta" style="margin-top:6px"><span class="price paid">56,70 €</span>Parkplatzvergleich · bezahlt</div></div>
+<div class="act"><span class="chip ok"><i></i>Ausgecheckt</span></div>
+</div><div class="trow done">
+<div><span class="dirdot out">↘</span><div class="time">09:10<small>Landung</small></div></div>
+<div class="who"><span class="n" data-open="6RKGU4198">Felix Kaya</span><a class="tel" href="tel:+491716558190"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 171 6558190</a></div>
+<div class="c3"><span class="plate">NE-PX 298</span><div class="meta" style="margin-top:6px">2 Pers. · Shuttle · Platz P2-30</div></div>
+<div class="c4"><span class="chip ok"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="14"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg><span class="mono">FR2418</span> · Gelandet 09:10</span><div class="meta" style="margin-top:6px"><span class="price paid">36,30 €</span>Online · bezahlt</div></div>
+<div class="act"><span class="chip ok"><i></i>Ausgecheckt</span></div>
+</div><div class="trow done">
+<div><span class="dirdot out">↘</span><div class="time">09:30<small>Landung</small></div></div>
+<div class="who"><span class="n" data-open="XZ6NM5967">Felix Kaya</span><a class="tel" href="tel:+491771678949"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 177 1678949</a></div>
+<div class="c3"><span class="plate">DO-VT 85</span><div class="meta" style="margin-top:6px">3 Pers. · Shuttle · Platz P1-36</div></div>
+<div class="c4"><span class="chip ok"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="14"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg><span class="mono">XQ6104</span> · Gelandet 09:30</span><div class="meta" style="margin-top:6px"><span class="price paid">49,50 €</span>Online · bezahlt</div></div>
+<div class="act"><span class="chip ok"><i></i>Ausgecheckt</span></div>
+</div><div class="trow done">
+<div><span class="dirdot out">↘</span><div class="time">10:00<small>Landung</small></div></div>
+<div class="who"><span class="n" data-open="WP4GJ6264">Lea Zimmermann</span><a class="tel" href="tel:+491729325655"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 172 9325655</a></div>
+<div class="c3"><span class="plate">SG-UQ 96</span><div class="meta" style="margin-top:6px">1 Pers. · Shuttle · Platz P3-56</div></div>
+<div class="c4"><span class="chip ok"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="14"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg><span class="mono">XQ3138</span> · Gelandet 10:00</span><div class="meta" style="margin-top:6px"><span class="price paid">58,30 €</span>Bar vor Ort · bezahlt</div></div>
+<div class="act"><span class="chip ok"><i></i>Ausgecheckt</span></div>
+</div><div class="trow done">
+<div><span class="dirdot out">↘</span><div class="time">10:20<small>Landung</small></div></div>
+<div class="who"><span class="n" data-open="ZTEQF5015">Paul Neumann</span><a class="tel" href="tel:+491712004376"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 171 2004376</a></div>
+<div class="c3"><span class="plate">NE-EF 736</span><div class="meta" style="margin-top:6px">2 Erw. + 2 Kinder · Shuttle · Platz P3-20</div></div>
+<div class="c4"><span class="chip">Keine Flugdaten</span><div class="meta" style="margin-top:6px"><span class="price paid">43,00 €</span>Bar vor Ort · bezahlt</div></div>
+<div class="act"><span class="chip ok"><i></i>Ausgecheckt</span></div>
+</div><div class="trow done">
+<div><span class="dirdot out">↘</span><div class="time">10:30<small>Landung</small></div></div>
+<div class="who"><span class="n" data-open="GUFTJ5876">Clara Jansen</span><a class="tel" href="tel:+491785819245"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 178 5819245</a></div>
+<div class="c3"><span class="plate">NE-AM 552</span><div class="meta" style="margin-top:6px">2 Erw. + 2 Kinder · Shuttle · Platz P4-12</div></div>
+<div class="c4"><span class="chip">Keine Flugdaten</span><div class="meta" style="margin-top:6px"><span class="price paid">55,10 €</span>Holiday Extras · bezahlt</div></div>
+<div class="act"><span class="chip ok"><i></i>Ausgecheckt</span></div>
+<div class="notes"><div class="note int"><b>Intern:</b><span>Elektroauto – an Ladesäule P1 stellen</span></div></div>
+</div><div class="trow done">
+<div><span class="dirdot out">↘</span><div class="time">11:50<small>Landung</small></div></div>
+<div class="who"><span class="n" data-open="JRVQK5420">Noah Zimmermann</span><a class="tel" href="tel:+491715605717"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 171 5605717</a></div>
+<div class="c3"><span class="plate">KR-JC 575</span><div class="meta" style="margin-top:6px">1 Pers. · Shuttle · Platz P3-15</div></div>
+<div class="c4"><span class="chip ok"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="14"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg><span class="mono">LH5084</span> · Gelandet 12:30</span><div class="meta" style="margin-top:6px"><span class="price paid">57,00 €</span>Parkplatzvergleich · bezahlt</div></div>
+<div class="act"><span class="chip ok"><i></i>Ausgecheckt</span></div>
+</div><div class="trow done">
+<div><span class="dirdot out">↘</span><div class="time">12:50<small>Landung</small></div></div>
+<div class="who"><span class="n" data-open="SD3WN6582">Elif Krüger</span><a class="tel" href="tel:+491752932098"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 175 2932098</a></div>
+<div class="c3"><span class="plate">DU-ER 855</span><div class="meta" style="margin-top:6px">1 Erw. + 2 Kinder · Valet · Platz P1-32</div><div style="margin-top:4px"><span class="chip warn" title="Bitte bereitstellen">2× Kindersitz</span></div></div>
+<div class="c4"><span class="chip ok"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="14"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg><span class="mono">TK1664</span> · Gelandet 12:55</span><div class="meta" style="margin-top:6px"><span class="price paid">122,33 €</span>Parkos · bezahlt</div></div>
+<div class="act"><span class="chip ok"><i></i>Ausgecheckt</span></div>
+<div class="notes"><div class="note cust"><b>Kunde:</b><span>Hund in Transportbox</span></div></div>
+</div><div class="trow done">
+<div><span class="dirdot out">↘</span><div class="time">13:30<small>Landung</small></div></div>
+<div class="who"><span class="n" data-open="LZ59N3176">Noah Becker</span><a class="tel" href="tel:+491705277230"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 170 5277230</a></div>
+<div class="c3"><span class="plate">K-VQ 914</span><div class="meta" style="margin-top:6px">4 Pers. · Shuttle · Platz P1-41</div></div>
+<div class="c4"><span class="chip ok"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="14"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg><span class="mono">XQ6427</span> · Gelandet 13:30</span><div class="meta" style="margin-top:6px"><span class="price paid">43,00 €</span>Bar vor Ort · bezahlt</div></div>
+<div class="act"><span class="chip ok"><i></i>Ausgecheckt</span></div>
+<div class="notes"><div class="note cust"><b>Kunde:</b><span>Komme evtl. 20 Min. später</span></div></div>
+</div><div class="trow done">
+<div><span class="dirdot out">↘</span><div class="time">15:00<small>Landung</small></div></div>
+<div class="who"><span class="n" data-open="SKTJ86123">Lukas Peters</span><a class="tel" href="tel:+491708183009"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 170 8183009</a></div>
+<div class="c3"><span class="plate">SG-WM 513</span><div class="meta" style="margin-top:6px">4 Pers. · Valet · Platz P2-01</div></div>
+<div class="c4"><span class="chip ok"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="14"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg><span class="mono">FR2665</span> · Gelandet 16:05</span><div class="meta" style="margin-top:6px"><span class="price paid">84,00 €</span>Parkplatzvergleich · bezahlt</div></div>
+<div class="act"><span class="chip ok"><i></i>Ausgecheckt</span></div>
+</div><div class="trow done">
+<div><span class="dirdot out">↘</span><div class="time">16:00<small>Landung</small></div></div>
+<div class="who"><span class="n" data-open="3SUWS7818">Paul Yilmaz</span><a class="tel" href="tel:+491718095261"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 171 8095261</a></div>
+<div class="c3"><span class="plate">D-LQ 513</span><div class="meta" style="margin-top:6px">2 Erw. + 1 Kind · Shuttle · Platz P2-27</div></div>
+<div class="c4"><span class="chip ok"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="14"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg><span class="mono">FR7146</span> · Gelandet 16:00</span><div class="meta" style="margin-top:6px"><span class="price paid">72,45 €</span>Parkplatzvergleich · bezahlt</div></div>
+<div class="act"><span class="chip ok"><i></i>Ausgecheckt</span></div>
+</div><div class="trow done">
+<div><span class="dirdot out">↘</span><div class="time">17:50<small>Landung</small></div></div>
+<div class="who"><span class="n" data-open="BJGLU5309">Lea Braun</span><a class="tel" href="tel:+491723396183"><svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="15"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>+49 172 3396183</a></div>
+<div class="c3"><span class="plate">MG-QB 600</span><div class="meta" style="margin-top:6px">1 Pers. · Shuttle · Platz P3-48</div></div>
+<div class="c4"><span class="chip ok"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24" width="14"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg><span class="mono">LH7758</span> · Gelandet 17:42</span><div class="meta" style="margin-top:6px"><span class="price paid">45,10 €</span>Online · bezahlt</div></div>
+<div class="act"><span class="chip ok"><i></i>Ausgecheckt</span></div>
+</div></div>
+</div>
+</main>
+
+<div class="toast" id="toast" role="status"></div>
+<script src="js/ui.js" defer></script>
+</body>
+</html>
