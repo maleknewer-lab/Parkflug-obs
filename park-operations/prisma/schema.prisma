@@ -1,4 +1,4 @@
-// Core data model — Phase 1. See CLAUDE.md §4.
+// Core data model — Phase 1 + Phase 2 additions. See CLAUDE.md §4.
 // Money is stored in integer cents. All prices/rules are data per brand/rate, never hard-coded.
 
 generator client {
@@ -111,6 +111,7 @@ model Brand {
   overstayFeeOutdoorCents Int @default(1500)
   vatRateBp           Int @default(1900) // basis points; keep configurable (open question)
   openingFloatCents   Int @default(15000) // Wechselgeld
+  returningDiscountPct Int @default(0) // Phase 2: optional returning-customer discount on rebook
 
   locations Location[]
   rates     Rate[]
@@ -157,10 +158,13 @@ model Rate {
   active     Boolean  @default(true)
   sort       Int      @default(0)
 
-  // Optional overrides of the brand's person/seat settings
+  // Optional overrides of the brand's person/seat/surcharge settings (null = use brand value)
   personsIncluded       Int?
   extraPersonPriceCents Int?
   seatPriceCents        Int?
+  kidsCountAsPerson     Boolean?
+  seatsEnabled          Boolean?
+  oversizeSurchargePct  Int?
 
   priceTables PriceTable[]
   bookings    Booking[]
@@ -200,7 +204,9 @@ model PriceTable {
   dayPriceCents Int[] // index 0 = 1 day … index 29 = 30 days
   extraDayCents Int   // price per day beyond 30
 
-  // NOTE: Postgres allows several NULL seasonId rows; the app must keep one base table per rate.
+  // NOTE: Postgres allows several NULL seasonId rows. One base table per rate is enforced
+  // by a partial unique index added by hand in the phase2_pricing_fields migration:
+  //   CREATE UNIQUE INDEX "PriceTable_rateId_base_key" ON "PriceTable"("rateId") WHERE "seasonId" IS NULL;
   @@unique([rateId, seasonId])
 }
 
@@ -250,6 +256,7 @@ model Customer {
 
   @@index([email])
   @@index([lastName])
+  @@index([phone])
 }
 
 model Booking {
@@ -282,6 +289,8 @@ model Booking {
   oversize Boolean @default(false)
 
   priceCents    Int
+  discountCents Int     @default(0)
+  priceBreakdown Json? // lines: parking, extra persons, oversize, extras, seats, coupon (Phase 2)
   paid          Boolean       @default(false)
   paymentMethod PaymentMethod?
   couponId      String?
@@ -292,6 +301,10 @@ model Booking {
 
   spaceId String?
   space   ParkingSpace? @relation(fields: [spaceId], references: [id])
+
+  // Cancellation (Phase 2)
+  cancelledAt DateTime?
+  cancelFree  Boolean? // was it cancelled inside the free-cancel window
 
   // Business customers (printed on the invoice)
   billingCompany String?
@@ -485,4 +498,5 @@ model ActivityLog {
   createdAt DateTime @default(now())
 
   @@index([entity, entityId])
+  @@index([bookingId])
 }
