@@ -14,6 +14,12 @@ npx prisma migrate dev --name init
 npm run db:seed             # fake users admin/dispo/fahrer@example.test (password printed, or SEED_PASSWORD)
 npm run dev
 ```
+Staff logins (no shell needed on the server, run from your own machine with `DATABASE_URL` = Render *External* URL):
+```bash
+npm run user:create -- --email=ali@firma.de --name="Ali" --role=fahrer   # roles: admin | dispo | fahrer
+npm run user:create -- --email=ali@firma.de --reset                      # new password
+npm run user:create -- --email=ali@firma.de --deactivate                 # block login
+```
 Checks (same as CI): `npm run lint && npm run typecheck && npm test`.
 
 ## How permissions work
