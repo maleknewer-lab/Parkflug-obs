@@ -32,9 +32,7 @@ export const authConfig = {
       return token;
     },
     session({ session, token }) {
-      if (session.user && token?.id) {
-        session.user.id = String(token.id);
-      }
+      session.user.id = token.id;
       session.user.role = token.role as Role;
       return session;
     },
