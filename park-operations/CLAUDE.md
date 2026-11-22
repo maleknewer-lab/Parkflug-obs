@@ -262,3 +262,5 @@ These do **not** block Phases 1–4. Build everything configurable and use clear
 | 2026-11-22 | Fonts self-hosted via `next/font` (no Google Fonts request from visitors, DSGVO). Money stored as integer cents. |
 | 2026-11-22 | Staff invitation by e-mail (set own password) is built with the staff page in Phase 4; Phase 1 uses seeded users. |
 | 2026-11-22 | Until the staff page exists (Phase 4), logins are created with `npm run user:create` (prisma/create-user.ts): random password printed once or `--password`, `--reset`, `--deactivate`. Seed users (`*@example.test`) must be deactivated/removed before real data goes in. |
+| 2026-11-22 | Because staff work from tablets (no shell on Render free), a minimal admin page `/admin/staff` (admin only, server-checked) creates logins, resets passwords (shown once) and locks/unlocks users; deactivating ends the open shift. E-mail invitation + attendance view stay in Phase 4. `npm run user:create` remains as CLI fallback. |
+| 2026-11-22 | Phase 2 starts with the default settings `kidsCountAsPerson = yes`, `seatPrice = 0 €` (Fawaz: start with defaults; still configurable per brand/rate). |
