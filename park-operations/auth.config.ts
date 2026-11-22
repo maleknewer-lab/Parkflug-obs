@@ -32,9 +32,12 @@ export const authConfig = {
       return token;
     },
     session({ session, token }) {
-      session.user.id = token.id;
+      if (session.user && token?.id) {
+        session.user.id = String(token.id);
+      }
       session.user.role = token.role as Role;
       return session;
     },
+    
   },
 } satisfies NextAuthConfig;
