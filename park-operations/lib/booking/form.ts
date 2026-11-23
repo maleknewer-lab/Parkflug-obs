@@ -26,8 +26,8 @@ export type BookingFormData = {
   couponCode: string | null;
   status: "confirmed" | "unconfirmed";
   paid: boolean;
-  paymentMethod: "CASH" | "EC" | "PARTNER" | null;
-  source: "PHONE" | "PARTNER_PORTAL" | "XPARK";
+  paymentMethod: "CASH" | "EC" | "PARTNER" | "ONLINE" | null;
+  source: "PHONE" | "PARTNER_PORTAL" | "XPARK" | "WEBSITE";
   externalRef: string | null;
   commissionCents: number | null;
   manualPriceCents: number | null;
@@ -50,7 +50,11 @@ export const MAX_BOOKING_DAYS = 365;
 
 export function parseBookingForm(
   get: (name: string) => string,
-  opts: { extraIds: string[] },
+  opts: {
+    extraIds: string[];
+    /** Edit mode: keep values only the system sets (online payment, website source). */
+    allowSystemValues?: boolean;
+  },
 ): ParseResult<BookingFormData> {
   const val = (name: string) => get(name).trim();
 
@@ -108,12 +112,21 @@ export function parseBookingForm(
     const paid = get("paid") === "on";
     const pm = val("paymentMethod");
     const paymentMethod: BookingFormData["paymentMethod"] =
-      pm === "" ? null : pm === "CASH" ? "CASH" : pm === "EC" ? "EC" : pm === "PARTNER" ? "PARTNER" : fail("Zahlart ungültig");
+      pm === "" ? null
+      : pm === "CASH" ? "CASH"
+      : pm === "EC" ? "EC"
+      : pm === "PARTNER" ? "PARTNER"
+      : pm === "ONLINE" && opts.allowSystemValues ? "ONLINE"
+      : fail("Zahlart ungültig");
     if (paid && !paymentMethod) fail("Bezahlt: bitte die Zahlart wählen");
 
     const srcRaw = val("source") || "PHONE";
     const src: BookingFormData["source"] =
-      srcRaw === "PHONE" ? "PHONE" : srcRaw === "PARTNER_PORTAL" ? "PARTNER_PORTAL" : srcRaw === "XPARK" ? "XPARK" : fail("Quelle ungültig");
+      srcRaw === "PHONE" ? "PHONE"
+      : srcRaw === "PARTNER_PORTAL" ? "PARTNER_PORTAL"
+      : srcRaw === "XPARK" ? "XPARK"
+      : srcRaw === "WEBSITE" && opts.allowSystemValues ? "WEBSITE"
+      : fail("Quelle ungültig");
     const status = val("status") === "unconfirmed" ? "unconfirmed" : "confirmed";
 
     const vatRaw = val("billingVatId").toUpperCase().replace(/\s+/g, "");
