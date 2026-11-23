@@ -117,13 +117,24 @@ export function BookingFields(props: {
             label="Zahlart"
             name="paymentMethod"
             value={v.paymentMethod ?? ""}
-            options={[["", "— noch offen —"], ["CASH", "Bar"], ["EC", "EC-Karte"], ["PARTNER", "Partner"]]}
+            options={[
+              ["", "— noch offen —"],
+              ["CASH", "Bar"],
+              ["EC", "EC-Karte"],
+              ["PARTNER", "Partner"],
+              ...(v.paymentMethod === "ONLINE" ? ([["ONLINE", "Online (Stripe)"]] as [string, string][]) : []),
+            ]}
           />
           <Select
             label="Quelle"
             name="source"
             value={v.source}
-            options={[["PHONE", "Telefon / WhatsApp"], ["PARTNER_PORTAL", "Partner-Portal"], ["XPARK", "X-Park"]]}
+            options={[
+              ["PHONE", "Telefon / WhatsApp"],
+              ["PARTNER_PORTAL", "Partner-Portal"],
+              ["XPARK", "X-Park"],
+              ...(v.source === "WEBSITE" ? ([["WEBSITE", "Website"]] as [string, string][]) : []),
+            ]}
           />
           <Field text label="Externe Buchungsnr. (Portal)" name="externalRef" defaultValue={v.externalRef} />
           <Field label="Provision (€, nur Auswertung)" name="commission" defaultValue={v.commission} />
