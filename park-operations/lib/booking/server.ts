@@ -111,3 +111,44 @@ export function breakdownJson(result: PriceResult, manualPriceCents: number | nu
     manualPriceCents,
   };
 }
+
+/** What recomputeStoredBooking needs from a stored booking (structural, so any query shape fits). */
+export type BookingForPricing = {
+  rateId: string;
+  createdAt: Date;
+  arrivalAt: Date;
+  departureAt: Date;
+  adults: number;
+  kids: number;
+  seatBaby: number;
+  seatKind: number;
+  seatBoost: number;
+  oversize: boolean;
+  coupon: { code: string } | null;
+  extras: { extraId: string; quantity: number; priceCents: number }[];
+};
+
+/**
+ * Re-prices a stored booking with today's price list. Extras keep the price they had when booked,
+ * an already used coupon is judged at the booking's creation date, inactive rates are fine.
+ */
+export function recomputeStoredBooking(b: BookingForPricing): Promise<PricedBooking> {
+  return computeBookingPrice({
+    rateId: b.rateId,
+    data: {
+      arrivalAt: b.arrivalAt,
+      departureAt: b.departureAt,
+      adults: b.adults,
+      kids: b.kids,
+      seatBaby: b.seatBaby,
+      seatKind: b.seatKind,
+      seatBoost: b.seatBoost,
+      oversize: b.oversize,
+      extras: b.extras.map((e) => ({ extraId: e.extraId, quantity: e.quantity })),
+      couponCode: b.coupon?.code ?? null,
+    },
+    keepExtraPrices: new Map(b.extras.map((e) => [e.extraId, e.priceCents])),
+    allowInactive: true,
+    now: b.createdAt,
+  });
+}
