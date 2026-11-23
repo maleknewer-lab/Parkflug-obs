@@ -1,10 +1,15 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { applyPriceAction, cancelBookingAction, updateBookingAction } from "@/app/actions/bookings";
+import { cancellationPolicy } from "@/lib/booking";
 import { allowedBrandIds, brandAllowed, requireOffice } from "@/lib/booking/auth";
+import { recomputeStoredBooking } from "@/lib/booking/server";
+import { bookingFormValues, manualPriceOf } from "@/lib/booking/values";
 import { db } from "@/lib/db";
-import { formatBerlin } from "@/lib/pricing";
+import { formatBerlin, priceDifference } from "@/lib/pricing";
 import { formatEuro } from "@/lib/rates/form";
-import { Message } from "../../rates/ui";
+import { Check, Field, Message, inputStyle } from "../../rates/ui";
+import { BookingFields } from "../fields";
 
 const STATUS = { unconfirmed: "Unbestätigt", confirmed: "Bestätigt", cancelled: "Storniert" } as const;
 const SOURCE = { WEBSITE: "Website", PHONE: "Telefon / WhatsApp", PARTNER_PORTAL: "Partner-Portal", XPARK: "X-Park" } as const;
@@ -17,7 +22,10 @@ function show(v: unknown): string {
   return typeof v === "object" ? JSON.stringify(v) : String(v);
 }
 
-// Booking detail (read-only in this step; editing and cancelling follow in the next PR).
+const rule = "1px solid rgba(128,128,128,.25)";
+const summaryStyle = { cursor: "pointer", minHeight: 44, display: "flex", alignItems: "center" } as const;
+
+// Booking page: details, price check (with difference), edit, cancel, history.
 export default async function BookingPage({
   params,
   searchParams,
@@ -42,9 +50,37 @@ export default async function BookingPage({
   });
   if (!b || !brandAllowed(await allowedBrandIds(me.id), b.brandId)) notFound();
 
+  const cancelled = b.status === "cancelled";
   const bd = b.priceBreakdown as unknown as Breakdown;
+  const manual = manualPriceOf(b.priceBreakdown);
   const persons = b.adults + b.kids;
   const seats = b.seatBaby + b.seatKind + b.seatBoost;
+
+  // Price check against today's price list (staff decide whether to apply it)
+  const calc = cancelled ? null : await recomputeStoredBooking(b);
+  const calcDiff = calc?.ok ? priceDifference(b.priceCents, calc.result.totalCents) : null;
+
+  // Edit form data
+  const rates = cancelled
+    ? []
+    : await db.rate.findMany({
+        where: { brandId: b.brandId, OR: [{ active: true }, { id: b.rateId }] },
+        orderBy: [{ sort: "asc" }, { name: "asc" }],
+        select: { id: true, name: true },
+      });
+  const extras = cancelled
+    ? []
+    : await db.extra.findMany({
+        where: { brandId: b.brandId, OR: [{ active: true }, { id: { in: b.extras.map((e) => e.extraId) } }] },
+        orderBy: { name: "asc" },
+        select: { id: true, name: true, priceCents: true },
+      });
+  const v = bookingFormValues({ ...b, customer: b.customer, couponCode: b.coupon?.code ?? null, manualPriceCents: manual });
+  const seatsEnabled = b.rate.seatsEnabled ?? b.brand.seatsEnabled;
+
+  // Cancellation
+  const policy = cancellationPolicy(b.arrivalAt, new Date(), b.brand.freeCancelHours);
+  const canCancel = !cancelled && b.transferStatus === "expected";
 
   return (
     <div className="page">
@@ -57,6 +93,13 @@ export default async function BookingPage({
       </div>
 
       <Message saved={sp.saved} error={sp.error} />
+
+      {cancelled && (
+        <div className="card pad" style={{ borderColor: "#b4534f" }}>
+          Storniert{b.cancelledAt ? ` am ${formatBerlin(b.cancelledAt)}` : ""} –{" "}
+          {b.cancelFree ? "kostenlos" : "nach Frist, der volle Preis bleibt fällig"}.
+        </div>
+      )}
 
       <section className="card pad" style={{ display: "grid", gap: 6 }}>
         <b>Kunde</b>
@@ -85,8 +128,8 @@ export default async function BookingPage({
             <span>{formatEuro(l.totalCents)} €</span>
           </span>
         ))}
-        <span style={{ display: "flex", justifyContent: "space-between", gap: 12, fontWeight: 600, borderTop: "1px solid rgba(128,128,128,.25)", paddingTop: 6 }}>
-          <span>Gesamt</span>
+        <span style={{ display: "flex", justifyContent: "space-between", gap: 12, fontWeight: 600, borderTop: rule, paddingTop: 6 }}>
+          <span>Gesamt{manual !== null ? " (manuell)" : ""}</span>
           <span>{formatEuro(b.priceCents)} €</span>
         </span>
         <span className="muted">
@@ -96,11 +139,90 @@ export default async function BookingPage({
         </span>
       </section>
 
+      {!cancelled && (
+        <section className="card pad" style={{ display: "grid", gap: 8 }}>
+          <b>Preisprüfung</b>
+          {calc && !calc.ok && <span>⚠ Prüfung nicht möglich: {calc.error}</span>}
+          {calc?.ok && calcDiff && (
+            <>
+              <span className="muted">Berechnet mit der aktuellen Preisliste, Daten und Optionen dieser Buchung.</span>
+              <span style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
+                <span>Neu berechnet</span><span>{formatEuro(calc.result.totalCents)} €</span>
+              </span>
+              <span style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
+                <span>Gespeichert</span><span>{formatEuro(b.priceCents)} €</span>
+              </span>
+              {calcDiff.kind === "none" && manual === null ? (
+                <span>✓ Der Preis entspricht der Berechnung.</span>
+              ) : (
+                <>
+                  {calcDiff.kind !== "none" && (
+                    <b>
+                      Differenz: {calcDiff.differenceCents > 0 ? "+" : ""}{formatEuro(calcDiff.differenceCents)} € (
+                      {calcDiff.kind === "extra_payment" ? "Nachzahlung" : "Erstattung"})
+                    </b>
+                  )}
+                  {b.paid && calcDiff.kind !== "none" && (
+                    <span className="muted">Die Buchung ist als bezahlt markiert – die Differenz muss nachkassiert bzw. erstattet werden.</span>
+                  )}
+                  <form action={applyPriceAction}>
+                    <input type="hidden" name="id" value={b.id} />
+                    <button className="btn" type="submit">
+                      {manual !== null ? "Manuellen Preis verwerfen, berechneten übernehmen" : "Neuen Preis übernehmen"}
+                    </button>
+                  </form>
+                </>
+              )}
+            </>
+          )}
+        </section>
+      )}
+
       <section className="card pad" style={{ display: "grid", gap: 6 }}>
         <b>Notizen</b>
         <span><span className="muted">Kunde:</span> {b.customerNote ?? "—"}</span>
         <span><span className="muted">Intern:</span> {b.internalNote ?? "—"}</span>
       </section>
+
+      {!cancelled && (
+        <details className="card pad">
+          <summary style={summaryStyle}><b>Buchung bearbeiten</b></summary>
+          <form action={updateBookingAction} style={{ display: "grid", gap: 20, paddingTop: 8 }}>
+            <input type="hidden" name="id" value={b.id} />
+            <label style={{ display: "grid", gap: 4 }}>
+              <span>Tarif</span>
+              <select name="rateId" defaultValue={b.rateId} style={inputStyle}>
+                {rates.map((r) => (
+                  <option key={r.id} value={r.id}>{r.name}</option>
+                ))}
+              </select>
+            </label>
+            <BookingFields seatsEnabled={seatsEnabled} extras={extras} v={v} />
+            <span className="muted" style={{ fontSize: 12 }}>
+              Der Preis ändert sich beim Speichern nicht automatisch – danach zeigt die Preisprüfung die Differenz.
+              Nur ein eingetragener manueller Preis wird sofort übernommen.
+            </span>
+            <button className="btn" type="submit">Änderungen speichern</button>
+          </form>
+        </details>
+      )}
+
+      {canCancel && (
+        <details className="card pad">
+          <summary style={summaryStyle}><b>Buchung stornieren</b></summary>
+          <form action={cancelBookingAction} style={{ display: "grid", gap: 12, paddingTop: 8 }}>
+            <input type="hidden" name="id" value={b.id} />
+            <span>
+              {policy.free
+                ? `Kostenlose Stornierung möglich bis ${formatBerlin(policy.deadline)}.`
+                : `Die Frist ist abgelaufen (${formatBerlin(policy.deadline)}): voller Preis, keine Erstattung.`}
+            </span>
+            {!policy.free && <Check label="Kulanz: trotzdem kostenlos stornieren" name="waive" checked={false} />}
+            <Field text label="Grund (optional)" name="reason" />
+            <button className="btn" type="submit">Jetzt stornieren</button>
+          </form>
+        </details>
+      )}
 
       <section className="card pad" style={{ display: "grid", gap: 8 }}>
         <b>Verlauf</b>
@@ -108,7 +230,7 @@ export default async function BookingPage({
         {b.activity.map((a) => {
           const changes = (a.changes ?? {}) as Record<string, { from: unknown; to: unknown }>;
           return (
-            <div key={a.id} style={{ borderTop: "1px solid rgba(128,128,128,.25)", paddingTop: 8 }}>
+            <div key={a.id} style={{ borderTop: rule, paddingTop: 8 }}>
               <span className="muted">{formatBerlin(a.createdAt)} · {a.user?.name ?? "System"} · {a.action}</span>
               {Object.entries(changes).map(([field, c]) => (
                 <div key={field}>{field}: {show(c.from)} → {show(c.to)}</div>
