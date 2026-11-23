@@ -123,7 +123,7 @@ describe("diffFields (booking history)", () => {
     phone: null as string | null,
     arrivalAt: new Date("2026-12-01T10:00:00Z"),
     adults: 2,
-    internalNote: "x",
+    internalNote: "x" as string | null,
   };
   const fields = ["plate", "phone", "arrivalAt", "adults", "internalNote"] as const;
 
