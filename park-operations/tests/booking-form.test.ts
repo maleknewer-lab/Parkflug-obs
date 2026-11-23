@@ -89,4 +89,13 @@ describe("parseBookingForm", () => {
   it("limits note length", () => {
     expect(parse({ internalNote: "x".repeat(1001) }).ok).toBe(false);
   });
+
+  it("online payment and website source are only accepted in edit mode", () => {
+    const values: Record<string, string> = { ...base, paid: "on", paymentMethod: "ONLINE", source: "WEBSITE" };
+    const get = (n: string) => values[n] ?? "";
+    expect(parseBookingForm(get, { extraIds: [] }).ok).toBe(false);
+    const r = parseBookingForm(get, { extraIds: [], allowSystemValues: true });
+    expect(r.ok && r.data.paymentMethod).toBe("ONLINE");
+    expect(r.ok && r.data.source).toBe("WEBSITE");
+  });
 });
