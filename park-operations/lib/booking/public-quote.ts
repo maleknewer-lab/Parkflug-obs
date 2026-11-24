@@ -21,6 +21,8 @@ export async function loadPublicBrand(slug: string) {
       privacyUrl: true,
       minLeadHours: true,
       seatsEnabled: true,
+      statementDescriptor: true,
+      paymentAccount: { select: { id: true, slug: true, name: true, envKey: true, active: true } },
       rates: {
         // Only rates that can actually be priced: active AND with a base price table
         where: { active: true, priceTables: { some: { seasonId: null } } },
