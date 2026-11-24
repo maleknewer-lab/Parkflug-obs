@@ -7,6 +7,7 @@ import type { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { diffFields } from "@/lib/booking";
+import { parseOptionalHttpsUrl } from "@/lib/booking/legal-links";
 import { db } from "@/lib/db";
 import {
   parseEuro,
@@ -87,6 +88,38 @@ export async function updateBrandSettingsAction(fd: FormData) {
   await db.brand.update({ where: { id }, data: next });
   await log(me.id, "Brand", id, "update_settings", changes);
   back(LIST, "saved", `${brand.name} gespeichert`);
+}
+
+// ───────── Brand: legal links & online booking ─────────
+// AGB / Impressum / Datenschutz live on the brand's WordPress site; the public booking pages link to them.
+export async function updateBrandLinksAction(fd: FormData) {
+  const me = await requireRole("admin");
+  const id = text(fd, "id");
+  const brand = await db.brand.findUnique({ where: { id } });
+  if (!brand) back(LIST, "error", "Marke nicht gefunden");
+
+  const urls = {
+    impressumUrl: parseOptionalHttpsUrl(text(fd, "impressumUrl")),
+    privacyUrl: parseOptionalHttpsUrl(text(fd, "privacyUrl")),
+    termsUrl: parseOptionalHttpsUrl(text(fd, "termsUrl")),
+  };
+  const labels = { impressumUrl: "Impressum", privacyUrl: "Datenschutz", termsUrl: "AGB" } as const;
+  const badUrl = (Object.keys(urls) as (keyof typeof urls)[]).find((k) => urls[k] === undefined);
+  if (badUrl) back(LIST, "error", `${brand.name}: „${labels[badUrl]}“ muss eine vollständige https://-Adresse sein`);
+
+  const hold = parseIntIn(text(fd, "unpaidHoldMinutes"), 5, 1440);
+  if (hold === null) back(LIST, "error", `${brand.name}: Frist für unbezahlte Online-Buchungen: 5–1440 Minuten`);
+
+  const next = {
+    impressumUrl: urls.impressumUrl as string | null,
+    privacyUrl: urls.privacyUrl as string | null,
+    termsUrl: urls.termsUrl as string | null,
+    unpaidHoldMinutes: hold,
+  };
+  const changes = diffFields(brand, next, Object.keys(next) as (keyof typeof next)[]);
+  await db.brand.update({ where: { id }, data: next });
+  await log(me.id, "Brand", id, "update_links", changes);
+  back(LIST, "saved", `${brand.name}: Links gespeichert`);
 }
 
 // ───────── Rates ─────────

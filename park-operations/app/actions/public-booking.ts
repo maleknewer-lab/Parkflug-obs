@@ -1,0 +1,139 @@
+"use server";
+
+// Public checkout (Phase 3, PR 2a): creates a booking from the website with CASH payment on site.
+// The visitor is untrusted: trip data is re-validated and re-priced on the server (same code as the
+// price page), customer fields go through the shared parser with an allow-list, and everything the
+// system decides (status, source, payment, paid, price) is set here. Online payment is PR 2b.
+
+import { Prisma } from "@prisma/client";
+import { redirect } from "next/navigation";
+import { generateUniqueBookingCode } from "@/lib/booking";
+import { parsePublicBookingForm } from "@/lib/booking/public-form";
+import { loadPublicBrand, quoteForBrand } from "@/lib/booking/public-quote";
+import { breakdownJson } from "@/lib/booking/server";
+import { db } from "@/lib/db";
+
+export type CheckoutState = { error?: string; values?: Record<string, string> };
+
+// Customer fields that are given back to the form after an error (never put into a URL)
+const REFILL = [
+  "firstName", "lastName", "email", "phone", "plate", "vehicle", "outboundFlight", "returnFlight",
+  "customerNote", "billingCompany", "billingContact", "billingAddress", "billingVatId",
+] as const;
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+
+export async function createPublicBookingAction(_prev: CheckoutState, fd: FormData): Promise<CheckoutState> {
+  const text = (name: string) => String(fd.get(name) ?? "").trim();
+  const values = Object.fromEntries(REFILL.map((k) => [k, String(fd.get(k) ?? "")]));
+  const fail = (error: string): CheckoutState => ({ error, values });
+
+  const slug = text("brandSlug");
+  const brand = await loadPublicBrand(slug);
+  if (!brand) return fail("Diese Buchungsseite ist nicht verfügbar");
+
+  const checkoutKey = text("checkoutKey");
+  if (!UUID.test(checkoutKey)) return fail("Die Sitzung ist abgelaufen. Bitte laden Sie die Seite neu.");
+
+  // Double click / retry: the same key returns the booking that already exists
+  const existing = await db.booking.findUnique({ where: { checkoutKey }, select: { code: true, brandId: true } });
+  if (existing && existing.brandId === brand.id) redirect(`/book/${brand.slug}/booked/${existing.code}`);
+
+  // Trip data: rate of THIS brand, lead time, price — all from the server
+  const now = new Date();
+  const quote = await quoteForBrand(brand, text, now);
+  if (quote.state !== "ok") return fail(quote.state === "error" ? quote.error : "Bitte zuerst die Reisedaten angeben");
+
+  // Customer data (allow-list; status/source/payment are forced)
+  const parsed = parsePublicBookingForm(text, { extraIds: brand.extras.map((e) => e.id), payment: "CASH" });
+  if (!parsed.ok) return fail(parsed.error);
+  const d = parsed.data;
+
+  const code = await generateUniqueBookingCode(
+    async (c) => (await db.booking.findUnique({ where: { code: c }, select: { id: true } })) !== null,
+  );
+
+  let createdCode: string | null = null;
+  try {
+    const booking = await db.$transaction(async (tx) => {
+      // Same e-mail (case-insensitive) = same customer. A visitor never overwrites an existing
+      // customer's data; an empty phone number may be filled in.
+      let customer = await tx.customer.findFirst({ where: { email: { equals: d.email, mode: "insensitive" } } });
+      if (!customer) {
+        customer = await tx.customer.create({
+          data: { firstName: d.firstName, lastName: d.lastName, email: d.email, phone: d.phone, company: d.company },
+        });
+      } else if (!customer.phone && d.phone) {
+        customer = await tx.customer.update({ where: { id: customer.id }, data: { phone: d.phone } });
+      }
+
+      return tx.booking.create({
+        data: {
+          code,
+          checkoutKey,
+          brandId: quote.brandId,
+          customerId: customer.id,
+          rateId: quote.data.rateId,
+          status: d.status, // confirmed (cash)
+          arrivalAt: d.arrivalAt,
+          departureAt: d.departureAt,
+          outboundFlight: d.outboundFlight,
+          returnFlight: d.returnFlight,
+          adults: d.adults,
+          kids: d.kids,
+          seatBaby: d.seatBaby,
+          seatKind: d.seatKind,
+          seatBoost: d.seatBoost,
+          plate: d.plate,
+          vehicle: d.vehicle,
+          oversize: d.oversize,
+          priceCents: quote.result.totalCents,
+          discountCents: quote.result.discountCents,
+          priceBreakdown: breakdownJson(quote.result, null),
+          paid: false,
+          paymentMethod: "CASH",
+          couponId: quote.couponId,
+          customerNote: d.customerNote,
+          billingCompany: d.billingCompany,
+          billingContact: d.billingContact,
+          billingAddress: d.billingAddress,
+          billingVatId: d.billingVatId,
+          source: "WEBSITE",
+          extras: {
+            create: quote.extras.map((e) => ({ extraId: e.extraId, quantity: e.quantity, priceCents: e.priceCents })),
+          },
+        },
+      });
+    });
+
+    await db.activityLog.create({
+      data: {
+        userId: null, // the visitor, not a staff member
+        bookingId: booking.id,
+        entity: "Booking",
+        entityId: booking.id,
+        action: "create",
+        changes: {
+          status: { from: null, to: booking.status },
+          priceCents: { from: null, to: booking.priceCents },
+          arrivalAt: { from: null, to: d.arrivalAt.toISOString() },
+          departureAt: { from: null, to: d.departureAt.toISOString() },
+          source: { from: null, to: "WEBSITE" },
+          paymentMethod: { from: null, to: "CASH" },
+        } as unknown as Prisma.InputJsonObject,
+      },
+    });
+    createdCode = booking.code;
+  } catch (e) {
+    // Two submits with the same key at the same moment: the second one lands here
+    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002") {
+      const again = await db.booking.findUnique({ where: { checkoutKey }, select: { code: true } });
+      if (again) createdCode = again.code;
+      else return fail("Bitte versuchen Sie es noch einmal.");
+    } else {
+      throw e;
+    }
+  }
+
+  redirect(`/book/${brand.slug}/booked/${createdCode}`);
+}
