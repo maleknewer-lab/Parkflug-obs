@@ -3,8 +3,7 @@ import {
   createExtraAction,
   createRateAction,
   saveExtraAction,
-  updateBrandSettingsAction,
-} from "@/app/actions/rates";
+  updateBrandSettingsAction, updateBrandLinksAction } from "@/app/actions/rates";
 import { db } from "@/lib/db";
 import { formatEuro } from "@/lib/rates/form";
 import { requireRole } from "@/lib/session";
@@ -118,6 +117,21 @@ export default async function RatesPage({
               </div>
               <Check label="Kinder zählen als Personen" name="kidsCountAsPerson" checked={b.kidsCountAsPerson} />
               <Check label="Kindersitze anbieten" name="seatsEnabled" checked={b.seatsEnabled} />
+              <button className="btn" type="submit">Speichern</button>
+            </form>
+          </details>
+
+          {/* Rechtliche Links & Online-Buchung */}
+          <details>
+            <summary style={{ cursor: "pointer", minHeight: 44, display: "flex", alignItems: "center" }}><b>Rechtliche Links &amp; Online-Buchung</b></summary>
+            <form action={updateBrandLinksAction} style={{ display: "grid", gap: 12, paddingTop: 8 }}>
+              <input type="hidden" name="id" value={b.id} />
+              <div style={grid}>
+                <Field text label="Impressum (URL)" name="impressumUrl" defaultValue={b.impressumUrl ?? ""} hint="https://… (WordPress-Seite der Marke)" />
+                <Field text label="Datenschutz (URL)" name="privacyUrl" defaultValue={b.privacyUrl ?? ""} hint="https://…" />
+                <Field text label="AGB (URL)" name="termsUrl" defaultValue={b.termsUrl ?? ""} hint="https://…" />
+                <Field label="Unbezahlte Online-Buchung stornieren nach (Min.)" name="unpaidHoldMinutes" defaultValue={b.unpaidHoldMinutes} hint="Standard 30" />
+              </div>
               <button className="btn" type="submit">Speichern</button>
             </form>
           </details>
