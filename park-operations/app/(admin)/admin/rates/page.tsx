@@ -3,7 +3,7 @@ import {
   createExtraAction,
   createRateAction,
   saveExtraAction,
-  updateBrandSettingsAction, updateBrandLinksAction } from "@/app/actions/rates";
+  updateBrandSettingsAction, updateBrandLinksAction, updateBrandPaymentSenderAction } from "@/app/actions/rates";
 import { db } from "@/lib/db";
 import { formatEuro } from "@/lib/rates/form";
 import { requireRole } from "@/lib/session";
@@ -17,6 +17,7 @@ export default async function RatesPage({
 }) {
   await requireRole("admin");
   const sp = await searchParams;
+  const accounts = await db.paymentAccount.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true, active: true } });
 
   const brands = await db.brand.findMany({
     orderBy: { name: "asc" },
@@ -132,6 +133,34 @@ export default async function RatesPage({
                 <Field text label="AGB (URL)" name="termsUrl" defaultValue={b.termsUrl ?? ""} hint="https://…" />
                 <Field label="Unbezahlte Online-Buchung stornieren nach (Min.)" name="unpaidHoldMinutes" defaultValue={b.unpaidHoldMinutes} hint="Standard 30" />
               </div>
+              <button className="btn" type="submit">Speichern</button>
+            </form>
+          </details>
+
+          {/* Zahlung & Absender */}
+          <details>
+            <summary style={{ cursor: "pointer", minHeight: 44, display: "flex", alignItems: "center" }}><b>Zahlung &amp; Absender</b></summary>
+            <form action={updateBrandPaymentSenderAction} style={{ display: "grid", gap: 12, paddingTop: 8 }}>
+              <input type="hidden" name="id" value={b.id} />
+              <div style={grid}>
+                <label style={{ display: "grid", gap: 4 }}>
+                  <span>Zahlungskonto (Stripe)</span>
+                  <select name="paymentAccountId" defaultValue={b.paymentAccountId ?? ""} style={inputStyle}>
+                    <option value="">– keine Online-Zahlung –</option>
+                    {accounts.map((a) => (
+                      <option key={a.id} value={a.id}>{a.name}{a.active ? "" : " (inaktiv)"}</option>
+                    ))}
+                  </select>
+                </label>
+                <Field text label="Text auf dem Kontoauszug" name="statementDescriptor" defaultValue={b.statementDescriptor ?? ""} hint="z. B. PARKFLUG (max. 12 Zeichen)" />
+                <Field text label="E-Mail: Absendername" name="emailFromName" defaultValue={b.emailFromName ?? ""} hint="z. B. ParkFlug" />
+                <Field text label="E-Mail: Absenderadresse" name="emailFromAddress" defaultValue={b.emailFromAddress ?? ""} hint="buchung@…" />
+                <Field text label="E-Mail: Antwort an" name="emailReplyTo" defaultValue={b.emailReplyTo ?? ""} hint="optional" />
+                <Field text label="SMS-Absendername" name="smsSenderName" defaultValue={b.smsSenderName ?? ""} hint="3–11 Zeichen, z. B. ParkFlug" />
+              </div>
+              <p className="muted" style={{ margin: 0 }}>
+                Zahlungskonten und ihre Schlüssel-Variablen: <Link href="/admin/payment-accounts">Zahlungskonten</Link>.
+              </p>
               <button className="btn" type="submit">Speichern</button>
             </form>
           </details>
