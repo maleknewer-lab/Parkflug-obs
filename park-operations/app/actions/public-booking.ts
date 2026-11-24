@@ -199,5 +199,5 @@ export async function createPublicBookingAction(_prev: CheckoutState, fd: FormDa
     }
   }
 
-  redirect(target);
+  redirect(target ?? `/book/${brand.slug}`);
 }
