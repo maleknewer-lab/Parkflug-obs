@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { loadPublicBrand, quoteForBrand } from "@/lib/booking/public-quote";
+import { quoteQueryString } from "@/lib/booking/quote";
 import { formatEuro } from "@/lib/rates/form";
+import { LegalFooter } from "../../_components/legal-footer";
 
 // Public booking page, step 1 of 2 (Phase 3, PR 1): trip data → live price.
 // A plain GET form: no JavaScript needed, and NO personal data in the URL (name, e-mail and phone
 // come in step 2 by POST, PR 2). The price always comes from the server (lib/pricing).
-// Creating the booking and paying are PR 2.
+// The checkout (customer data + booking) is /book/[brand]/checkout.
 
 export const metadata: Metadata = { title: "Parkplatz buchen" };
 export const dynamic = "force-dynamic";
@@ -153,20 +155,21 @@ export default async function PublicBookingPage({
                 </tr>
               ))}
               <tr className="pub-total">
-                <td>Gesamtpreis</td>
+                <td>Gesamtpreis (inkl. MwSt.)</td>
                 <td>{formatEuro(quote.result.totalCents)} €</td>
               </tr>
             </tbody>
           </table>
-          <p className="pub-muted" style={{ margin: 0 }}>
-            Dies ist eine unverbindliche Preisberechnung. Die Buchung mit Zahlung folgt im nächsten Schritt.
-          </p>
+          <a
+            className="pub-btn"
+            href={`/book/${brand.slug}/checkout?${quoteQueryString(get, brand.extras.map((e) => e.id))}`}
+          >
+            Weiter zur Buchung
+          </a>
         </section>
       )}
 
-      <footer className="pub-foot pub-muted">
-        {brand.termsUrl && <a href={brand.termsUrl}>AGB</a>}
-      </footer>
+      <LegalFooter brand={brand} />
     </main>
   );
 }
