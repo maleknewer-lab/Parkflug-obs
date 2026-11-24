@@ -101,6 +101,25 @@ model Company {
   brands Brand[]
 }
 
+// ───────── Payment accounts ─────────
+// One row = one Stripe account. Several brands may share one account (today: "Park Gruppe").
+// Only NON-secret settings live here. The secret keys stay in environment variables; `envKey` says WHICH
+// ones: "DEFAULT" → STRIPE_SECRET_KEY / STRIPE_WEBHOOK_SECRET / NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+// "ACME" → STRIPE_SECRET_KEY_ACME / STRIPE_WEBHOOK_SECRET_ACME / STRIPE_PUBLISHABLE_KEY_ACME.
+// Later (selling the system): each company connects its own account (Stripe Connect, direct charges);
+// that adds fields here, the payment code keeps reading the account from this table.
+model PaymentAccount {
+  id     String  @id @default(cuid())
+  slug   String  @unique // used in the webhook URL: /api/stripe/webhook/<slug>
+  name   String
+  envKey String
+  active Boolean @default(true)
+  createdAt DateTime @default(now())
+
+  brands   Brand[]
+  payments Payment[]
+}
+
 // ───────── Brands, lots, rates ─────────
 model Brand {
   id    String  @id @default(cuid())
@@ -118,6 +137,17 @@ model Brand {
 
   companyId String?
   company   Company? @relation(fields: [companyId], references: [id])
+
+  // Online payment: which Stripe account receives this brand's payments (null = online payment off)
+  paymentAccountId String?
+  paymentAccount   PaymentAccount? @relation(fields: [paymentAccountId], references: [id])
+  statementDescriptor String? // suffix on the customer's card statement, e.g. "PARKFLUG"
+
+  // Sender of e-mails (Phase 3 PR 3) and SMS (Phase 6): from the brand, never hard-coded
+  emailFromName    String?
+  emailFromAddress String?
+  emailReplyTo     String?
+  smsSenderName    String?
 
   // Online booking: unpaid online bookings are cancelled after this many minutes (used from PR 2b)
   unpaidHoldMinutes Int @default(30)
@@ -392,6 +422,9 @@ model Payment {
   amountCents   Int
   refundedCents Int @default(0)
   stripePaymentIntentId String? @unique
+  // Which Stripe account took this payment — refunds always go back to the same account
+  paymentAccountId String?
+  paymentAccount   PaymentAccount? @relation(fields: [paymentAccountId], references: [id])
   receivedById String?
   receivedBy   User?  @relation(fields: [receivedById], references: [id])
   paidAt    DateTime?
