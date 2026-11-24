@@ -1,0 +1,20 @@
+# CLAUDE.md additions for PR 2b (apply in the same PR; PR 2a must be merged first)
+
+## Section 3 → Payment (replace the Stripe sentence)
+- Payments go through **payment accounts** (table `PaymentAccount`): one row = one Stripe account; brands reference one (`Brand.paymentAccountId`). Several brands may share an account (today ParkFlug + DUS Valet → "Park Gruppe"). A brand without an account offers cash only.
+- **Secrets stay in environment variables only**, never in the database or code. The database stores only the key NAME (`PaymentAccount.envKey`): `DEFAULT` → `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`; `ACME` → `STRIPE_SECRET_KEY_ACME`, `STRIPE_WEBHOOK_SECRET_ACME`, `STRIPE_PUBLISHABLE_KEY_ACME`. Admin page `/admin/payment-accounts` shows yes/no which variables exist (never the values).
+- Statement descriptor suffix (what the customer sees on the card statement), e-mail sender name/address/reply-to and SMS sender name are **brand settings** (`Brand.statementDescriptor`, `emailFromName`, `emailFromAddress`, `emailReplyTo`, `smsSenderName`); no sender or account is hard-coded anywhere. The SMTP/SMS credentials themselves stay in the environment.
+- Every `Payment` stores the account that took it (`paymentAccountId`); refunds always go to that account.
+- Online booking flow: the payment intent is created first, then the booking (`unconfirmed`) with a `PENDING` payment; the booking becomes `confirmed` + paid **only** when the signed webhook `payment_intent.succeeded` arrives (amount and currency must match, otherwise it is flagged in the activity log and not confirmed). Webhooks are idempotent.
+- Webhook URL is per ACCOUNT: `/api/stripe/webhook/<account slug>` (replaces the per-brand URL planned earlier). Events: `payment_intent.succeeded`, `payment_intent.canceled`.
+- Cron `GET|POST /api/cron/expire-unpaid` with `Authorization: Bearer <CRON_SECRET>` (env var) cancels online bookings unpaid after `Brand.unpaidHoldMinutes` (default 30): it cancels the payment intent first; if the customer paid in the meantime, the booking is confirmed instead.
+- **Future (not built):** when the system is offered to other operators, each company connects its own Stripe account (Stripe Connect, direct charges, optional application fee) so customer money never passes through our account (collecting other companies' money would need a BaFin licence). The payment code already reads the account from `PaymentAccount`, so this only adds fields there.
+
+## Section 8 → Open questions (add)
+- Is the third brand (a separate legal entity) allowed to take its online payments on the "Park Gruppe" account? Collecting money for another legal entity may raise the same BaFin question — ask the tax advisor/lawyer BEFORE that brand takes online payments; until then give it its own payment account or cash only. [before that brand goes live]
+- Which scheduler calls the expire-unpaid endpoint every ~5 minutes (Render Cron Job, or a free external service such as cron-job.org with the Authorization header)? [PR 2b deploy]
+- Sender domains for brand e-mails: the SMTP provider must be allowed to send from each brand's domain (SPF/DKIM), otherwise mails land in spam. [PR 3]
+
+## Section 9 → Decision log (add)
+| 2026-11-24 | Payment accounts in the database (`PaymentAccount`: name, slug, env key name, active); brands point to one; secrets only in `.env`/Render. Webhook per account. Statement descriptor and e-mail/SMS sender per brand. Stripe Connect (direct charges) for selling the system: later, not built. |
+| 2026-11-24 | Online payment (PR 2b): Stripe REST via fetch (no SDK), API version pinned `2024-06-20`; signature check is our own HMAC code with tests; booking confirmed only by the webhook; unpaid online bookings expire after `unpaidHoldMinutes` through the cron endpoint. A booking that expired while its payment arrived is re-confirmed (logged as `payment_reconfirmed`). If a statement descriptor is rejected by Stripe the payment is retried without it. |
