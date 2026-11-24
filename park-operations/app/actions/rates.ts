@@ -8,6 +8,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { diffFields } from "@/lib/booking";
 import { parseOptionalHttpsUrl } from "@/lib/booking/legal-links";
+import { parseOptionalEmail, parseSenderName, parseSmsSender } from "@/lib/brand/sender";
+import { parseStatementDescriptor } from "@/lib/payments/rules";
 import { db } from "@/lib/db";
 import {
   parseEuro,
@@ -120,6 +122,44 @@ export async function updateBrandLinksAction(fd: FormData) {
   await db.brand.update({ where: { id }, data: next });
   await log(me.id, "Brand", id, "update_links", changes);
   back(LIST, "saved", `${brand.name}: Links gespeichert`);
+}
+
+// ───────── Brand: payment account & sender identity ─────────
+// Which Stripe account takes this brand's payments, what the customer sees on the card statement, and who
+// e-mails/SMS come from. All of it is brand data in the database; secret keys stay in the environment.
+export async function updateBrandPaymentSenderAction(fd: FormData) {
+  const me = await requireRole("admin");
+  const id = text(fd, "id");
+  const brand = await db.brand.findUnique({ where: { id } });
+  if (!brand) back(LIST, "error", "Marke nicht gefunden");
+
+  const accountId = text(fd, "paymentAccountId");
+  if (accountId !== "" && !(await db.paymentAccount.findUnique({ where: { id: accountId }, select: { id: true } }))) {
+    back(LIST, "error", `${brand.name}: Zahlungskonto nicht gefunden`);
+  }
+  const descriptor = parseStatementDescriptor(text(fd, "statementDescriptor"));
+  if (descriptor === undefined) back(LIST, "error", `${brand.name}: Kontoauszug-Text: 2–12 Zeichen, nur Buchstaben, Ziffern, Leerzeichen, Punkt, Bindestrich (mind. ein Buchstabe)`);
+  const fromName = parseSenderName(text(fd, "emailFromName"));
+  if (fromName === undefined) back(LIST, "error", `${brand.name}: Absendername ungültig (max. 80 Zeichen, keine Zeilenumbrüche oder < > ")`);
+  const fromAddress = parseOptionalEmail(text(fd, "emailFromAddress"));
+  if (fromAddress === undefined) back(LIST, "error", `${brand.name}: Absender-E-Mail ungültig`);
+  const replyTo = parseOptionalEmail(text(fd, "emailReplyTo"));
+  if (replyTo === undefined) back(LIST, "error", `${brand.name}: Antwort-E-Mail ungültig`);
+  const sms = parseSmsSender(text(fd, "smsSenderName"));
+  if (sms === undefined) back(LIST, "error", `${brand.name}: SMS-Absender: 3–11 Buchstaben/Ziffern ohne Leerzeichen (mind. ein Buchstabe)`);
+
+  const next = {
+    paymentAccountId: accountId === "" ? null : accountId,
+    statementDescriptor: descriptor as string | null,
+    emailFromName: fromName as string | null,
+    emailFromAddress: fromAddress as string | null,
+    emailReplyTo: replyTo as string | null,
+    smsSenderName: sms as string | null,
+  };
+  const changes = diffFields(brand, next, Object.keys(next) as (keyof typeof next)[]);
+  await db.brand.update({ where: { id }, data: next });
+  await log(me.id, "Brand", id, "update_payment_sender", changes);
+  back(LIST, "saved", `${brand.name}: Zahlung & Absender gespeichert`);
 }
 
 // ───────── Rates ─────────
