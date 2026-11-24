@@ -55,3 +55,11 @@
 .pub-lines td:last-child { text-align: right; white-space: nowrap; }
 .pub-total td { font-weight: 700; font-size: 1.1rem; border-bottom: 0; padding-top: 10px; }
 .pub-foot { text-align: center; padding-top: 8px; }
+.pub-btn { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+.pub-btn[disabled] { opacity: .6; cursor: default; }
+.pub-foot a { color: inherit; display: inline-block; padding: 12px 8px; }
+.pub-sum { display: grid; gap: 4px; }
+.pub-fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 12px; }
+.pub-fieldset legend { font-weight: 600; margin-bottom: 8px; padding: 0; }
+.pub-field textarea { width: 100%; box-sizing: border-box; min-height: 88px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--pub-line); background: var(--pub-bg); color: inherit; font: inherit; }
+.pub-code { font-size: 1.8rem; font-weight: 700; letter-spacing: .08em; }
