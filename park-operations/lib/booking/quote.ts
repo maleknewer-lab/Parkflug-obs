@@ -77,3 +77,15 @@ export function parseQuoteParams(
     throw e;
   }
 }
+
+const QUOTE_FIELDS = ["rateId", "arrivalAt", "departureAt", "adults", "kids", "seatBaby", "seatKind", "seatBoost", "oversize", "couponCode"];
+
+/** Query string that carries the non-personal trip data from the price page to the checkout page. */
+export function quoteQueryString(get: (name: string) => string, extraIds: string[]): string {
+  const qs = new URLSearchParams();
+  for (const name of [...QUOTE_FIELDS, ...extraIds.map((id) => `extra_${id}`)]) {
+    const v = get(name).trim();
+    if (v !== "") qs.set(name, v);
+  }
+  return qs.toString();
+}

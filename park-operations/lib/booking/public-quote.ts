@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import { formatBerlin, type PriceResult } from "@/lib/pricing";
 import { checkLeadTime } from "./rules";
 import { parseQuoteParams, type QuoteData } from "./quote";
-import { computeBookingPrice } from "./server";
+import { computeBookingPrice, type PricedExtra } from "./server";
 
 export async function loadPublicBrand(slug: string) {
   return db.brand.findFirst({
@@ -17,6 +17,8 @@ export async function loadPublicBrand(slug: string) {
       logoUrl: true,
       colors: true,
       termsUrl: true,
+      impressumUrl: true,
+      privacyUrl: true,
       minLeadHours: true,
       seatsEnabled: true,
       rates: {
@@ -39,7 +41,16 @@ export type PublicBrand = NonNullable<Awaited<ReturnType<typeof loadPublicBrand>
 export type PublicQuote =
   | { state: "idle" }
   | { state: "error"; error: string }
-  | { state: "ok"; data: QuoteData; result: PriceResult; rateName: string };
+  | {
+      state: "ok";
+      data: QuoteData;
+      result: PriceResult;
+      rateName: string;
+      /** Needed to create the booking (same price run, never recomputed from browser data). */
+      brandId: string;
+      extras: PricedExtra[];
+      couponId: string | null;
+    };
 
 /** `get` reads one query parameter as a string ("" when missing). `now` is passed in (testable). */
 export async function quoteForBrand(
@@ -70,5 +81,13 @@ export async function quoteForBrand(
 
   const priced = await computeBookingPrice({ rateId: data.rateId, data, now });
   if (!priced.ok) return { state: "error", error: priced.error };
-  return { state: "ok", data, result: priced.result, rateName: rate.name };
+  return {
+    state: "ok",
+    data,
+    result: priced.result,
+    rateName: rate.name,
+    brandId: priced.brandId,
+    extras: priced.extras,
+    couponId: priced.couponId,
+  };
 }
