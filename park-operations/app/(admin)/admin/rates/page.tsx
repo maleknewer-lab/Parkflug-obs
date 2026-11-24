@@ -45,6 +45,11 @@ export default async function RatesPage({
       {brands.map((b) => (
         <section key={b.id} className="card pad" style={{ display: "grid", gap: 16 }}>
           <h2 style={{ margin: 0 }}>{b.name}</h2>
+          <span className="muted">
+            Buchungsseite: <Link href={`/book/${b.slug}`}>/book/{b.slug}</Link>
+            {b.active ? "" : " · Marke ist inaktiv (Seite nicht erreichbar)"}
+            {b.rates.some((r) => r.active) ? "" : " · kein aktiver Tarif"}
+          </span>
 
           {/* Tarife */}
           <div style={{ display: "grid", gap: 8 }}>
