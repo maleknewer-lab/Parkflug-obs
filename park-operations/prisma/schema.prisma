@@ -83,6 +83,24 @@ enum MessageChannel {
   SMS
 }
 
+// ───────── Companies (legal entities) ─────────
+// A brand belongs to a company. Invoice numbering (GoBD) and the Tageskasse / day closing are PER COMPANY.
+// Filled in the admin before Phase 5; brands may stay without a company until then (companyId optional).
+model Company {
+  id      String  @id @default(cuid())
+  name    String // legal name as printed on invoices
+  address String?
+  taxNo   String? // Steuernummer
+  vatId   String? // USt-IdNr.
+  bankName String?
+  iban     String?
+  bic      String?
+  active  Boolean @default(true)
+  createdAt DateTime @default(now())
+
+  brands Brand[]
+}
+
 // ───────── Brands, lots, rates ─────────
 model Brand {
   id    String  @id @default(cuid())
@@ -92,9 +110,17 @@ model Brand {
   logoUrl String?
   colors Json? // { brand, accent, … } for the public booking page
   emailSender String?
-  termsUrl String?
+  termsUrl String? // AGB on the brand's WordPress site
+  impressumUrl String? // Impressum on the brand's WordPress site
+  privacyUrl   String? // Datenschutz on the brand's WordPress site
   invoiceSender Json? // company, address, taxNo, vatId, bank — filled in Phase 5
   active Boolean @default(true)
+
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id])
+
+  // Online booking: unpaid online bookings are cancelled after this many minutes (used from PR 2b)
+  unpaidHoldMinutes Int @default(30)
 
   // Persons & child seats (CHANGES.md, 2026-11-21)
   personsIncluded     Int     @default(3)
@@ -316,6 +342,10 @@ model Booking {
   source        BookingSource @default(WEBSITE)
   externalRef   String? // portal / X-Park booking number
   commissionCents Int? // reporting only
+
+  // Public checkout: random key made when the form is shown; a double click / retry with the same key
+  // returns the same booking instead of creating a second one.
+  checkoutKey String? @unique
 
   rebookedFromId String?
   rebookedFrom   Booking?  @relation("Rebook", fields: [rebookedFromId], references: [id])
