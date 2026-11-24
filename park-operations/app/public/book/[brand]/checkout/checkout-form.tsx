@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { createPublicBookingAction, type CheckoutState } from "@/app/actions/public-booking";
 
 // Step 2: customer data. Errors come back WITHOUT a page reload and the typed values are kept
@@ -9,11 +9,14 @@ export function CheckoutForm({
   brandSlug,
   checkoutKey,
   carried,
+  onlineAvailable,
 }: {
   brandSlug: string;
   checkoutKey: string;
   carried: [string, string][]; // non-personal trip data from the price page
+  onlineAvailable: boolean; // the brand has an active payment account with all keys configured
 }) {
+  const [payment, setPayment] = useState<"ONLINE" | "CASH">(onlineAvailable ? "ONLINE" : "CASH");
   const [state, action, pending] = useActionState<CheckoutState, FormData>(createPublicBookingAction, {});
   const v = (name: string) => state.values?.[name] ?? "";
 
@@ -96,8 +99,17 @@ export function CheckoutForm({
 
       <fieldset className="pub-fieldset">
         <legend>Zahlung</legend>
+        {onlineAvailable && (
+          <label className="pub-rate">
+            <input type="radio" name="payment" value="ONLINE" checked={payment === "ONLINE"} onChange={() => setPayment("ONLINE")} />
+            <span>
+              Online bezahlen
+              <small>Sicher per Karte oder weiteren Zahlarten. Die Buchung gilt nach erfolgreicher Zahlung.</small>
+            </span>
+          </label>
+        )}
         <label className="pub-rate">
-          <input type="radio" name="payment" value="CASH" defaultChecked readOnly />
+          <input type="radio" name="payment" value="CASH" checked={payment === "CASH"} onChange={() => setPayment("CASH")} />
           <span>
             Barzahlung vor Ort
             <small>Sie zahlen bei Ankunft am Parkplatz.</small>
@@ -108,7 +120,7 @@ export function CheckoutForm({
       {state.error && <div className="pub-error" role="alert">⚠ {state.error}</div>}
 
       <button type="submit" className="pub-btn" disabled={pending}>
-        {pending ? "Wird gebucht …" : "Verbindlich buchen"}
+        {pending ? "Bitte warten …" : payment === "ONLINE" ? "Weiter zur Zahlung" : "Verbindlich buchen"}
       </button>
     </form>
   );

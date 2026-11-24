@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { loadPublicBrand, quoteForBrand } from "@/lib/booking/public-quote";
+import { onlineAvailable } from "@/lib/payments/account";
 import { quoteQueryString } from "@/lib/booking/quote";
 import { formatBerlin } from "@/lib/pricing";
 import { formatEuro } from "@/lib/rates/form";
@@ -85,7 +86,7 @@ export default async function CheckoutPage({
         <a href={backHref} className="pub-muted">Reisedaten ändern</a>
       </section>
 
-      <CheckoutForm brandSlug={brand.slug} checkoutKey={crypto.randomUUID()} carried={carried} />
+      <CheckoutForm brandSlug={brand.slug} checkoutKey={crypto.randomUUID()} carried={carried} onlineAvailable={onlineAvailable(brand.paymentAccount)} />
 
       <LegalFooter brand={brand} />
     </main>
