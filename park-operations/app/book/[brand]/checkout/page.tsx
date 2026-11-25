@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { loadPublicBrand, quoteForBrand } from "@/lib/booking/public-quote";
+import { loadPublicBrand, safeQuoteForBrand } from "@/lib/booking/public-quote";
 import { onlineAvailable } from "@/lib/payments/account";
 import { quoteQueryString } from "@/lib/booking/quote";
 import { formatBerlin } from "@/lib/pricing";
@@ -34,7 +34,7 @@ export default async function CheckoutPage({
   };
   const extraIds = brand.extras.map((e) => e.id);
   const qs = quoteQueryString(get, extraIds);
-  const quote = await quoteForBrand(brand, get, new Date());
+  const quote = await safeQuoteForBrand(brand, get, new Date());
   const backHref = `/book/${brand.slug}${qs ? `?${qs}` : ""}`;
 
   if (quote.state !== "ok") {
