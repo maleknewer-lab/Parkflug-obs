@@ -30,7 +30,7 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const nextPath = (slug: string, code: string, online: boolean, status: string) =>
   online && status === "unconfirmed" ? `/book/${slug}/pay/${code}` : `/book/${slug}/booked/${code}`;
 
-export async function createPublicBookingAction(_prev: CheckoutState, fd: FormData): Promise<CheckoutState> {
+async function createPublicBookingInner(fd: FormData): Promise<CheckoutState> {
   const text = (name: string) => String(fd.get(name) ?? "").trim();
   const values = Object.fromEntries(REFILL.map((k) => [k, String(fd.get(k) ?? "")]));
   const fail = (error: string): CheckoutState => ({ error, values });
@@ -200,4 +200,16 @@ export async function createPublicBookingAction(_prev: CheckoutState, fd: FormDa
   }
 
   redirect(target ?? `/book/${brand.slug}`);
+}
+
+export async function createPublicBookingAction(_prev: CheckoutState, fd: FormData): Promise<CheckoutState> {
+  try {
+    return await createPublicBookingInner(fd);
+  } catch (e) {
+    // redirect() works by throwing: let Next.js handle it
+    const digest = typeof e === "object" && e !== null && "digest" in e ? String((e as { digest: unknown }).digest) : "";
+    if (digest.startsWith("NEXT_REDIRECT")) throw e;
+    console.error("[public-booking] failed:", e);
+    return { error: "Die Buchung konnte gerade nicht gespeichert werden. Bitte versuchen Sie es in einem Moment erneut." };
+  }
 }
