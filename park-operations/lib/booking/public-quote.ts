@@ -93,3 +93,18 @@ export async function quoteForBrand(
     couponId: priced.couponId,
   };
 }
+
+/** Like quoteForBrand, but an unexpected failure (database, bug) is logged with its real cause and shown
+ *  as a friendly message instead of a crashed page. Search the server log for "[public-quote]". */
+export async function safeQuoteForBrand(
+  brand: PublicBrand,
+  get: (name: string) => string,
+  now: Date,
+): Promise<PublicQuote> {
+  try {
+    return await quoteForBrand(brand, get, now);
+  } catch (e) {
+    console.error("[public-quote] failed:", e);
+    return { state: "error", error: "Der Preis konnte gerade nicht berechnet werden. Bitte versuchen Sie es in einem Moment erneut." };
+  }
+}
