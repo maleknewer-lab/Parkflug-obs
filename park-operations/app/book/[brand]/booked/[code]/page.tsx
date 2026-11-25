@@ -19,7 +19,9 @@ export default async function BookedPage({ params }: { params: Promise<{ brand: 
   const code = normalizeBookingCode(rawCode);
   if (!isValidBookingCode(code)) notFound();
 
-  const booking = await db.booking.findFirst({
+  let booking;
+  try {
+    booking = await db.booking.findFirst({
     where: { code, brand: { slug } },
     select: {
       code: true,
@@ -35,6 +37,18 @@ export default async function BookedPage({ params }: { params: Promise<{ brand: 
       brand: { select: { name: true, impressumUrl: true, privacyUrl: true, termsUrl: true } },
     },
   });
+  } catch (e) {
+    console.error("[booked-page] failed:", e);
+    return (
+      <main className="pub-wrap">
+        <section className="pub-card">
+          <h2>Ihre Buchung wurde gespeichert</h2>
+          <div className="pub-code">{code}</div>
+          <p className="pub-muted" style={{ margin: 0 }}>Die Details können gerade nicht angezeigt werden. Bitte notieren Sie den Code.</p>
+        </section>
+      </main>
+    );
+  }
   if (!booking) notFound();
 
   const persons = booking.adults + booking.kids;
