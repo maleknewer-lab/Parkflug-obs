@@ -45,6 +45,39 @@ export default async function PublicBookingPage({
         <h1>{brand.name}</h1>
       </header>
 
+      {quote.state === "error" && (
+        <div className="pub-error" role="alert">⚠ {quote.error}</div>
+      )}
+
+      {quote.state === "ok" && (
+        <section className="pub-card" aria-live="polite">
+          <h2>Ihr Preis · {quote.rateName}</h2>
+          <table className="pub-lines">
+            <tbody>
+              {quote.result.lines.map((l, i) => (
+                <tr key={i}>
+                  <td>
+                    {l.label}
+                    {l.quantity > 1 && <span className="pub-muted"> × {l.quantity}</span>}
+                  </td>
+                  <td>{l.totalCents < 0 ? "−" : ""}{formatEuro(Math.abs(l.totalCents))} €</td>
+                </tr>
+              ))}
+              <tr className="pub-total">
+                <td>Gesamtpreis (inkl. MwSt.)</td>
+                <td>{formatEuro(quote.result.totalCents)} €</td>
+              </tr>
+            </tbody>
+          </table>
+          <a
+            className="pub-btn"
+            href={`/book/${brand.slug}/checkout?${quoteQueryString(get, brand.extras.map((e) => e.id))}`}
+          >
+            Weiter zur Buchung
+          </a>
+        </section>
+      )}
+
       {brand.rates.length === 0 ? (
         <div className="pub-card">Online-Buchungen sind zurzeit nicht möglich. Bitte kontaktieren Sie uns direkt.</div>
       ) : (
@@ -134,39 +167,6 @@ export default async function PublicBookingPage({
 
           <button type="submit" className="pub-btn">Preis berechnen</button>
         </form>
-      )}
-
-      {quote.state === "error" && (
-        <div className="pub-error" role="alert">⚠ {quote.error}</div>
-      )}
-
-      {quote.state === "ok" && (
-        <section className="pub-card" aria-live="polite">
-          <h2>Ihr Preis · {quote.rateName}</h2>
-          <table className="pub-lines">
-            <tbody>
-              {quote.result.lines.map((l, i) => (
-                <tr key={i}>
-                  <td>
-                    {l.label}
-                    {l.quantity > 1 && <span className="pub-muted"> × {l.quantity}</span>}
-                  </td>
-                  <td>{l.totalCents < 0 ? "−" : ""}{formatEuro(Math.abs(l.totalCents))} €</td>
-                </tr>
-              ))}
-              <tr className="pub-total">
-                <td>Gesamtpreis (inkl. MwSt.)</td>
-                <td>{formatEuro(quote.result.totalCents)} €</td>
-              </tr>
-            </tbody>
-          </table>
-          <a
-            className="pub-btn"
-            href={`/book/${brand.slug}/checkout?${quoteQueryString(get, brand.extras.map((e) => e.id))}`}
-          >
-            Weiter zur Buchung
-          </a>
-        </section>
       )}
 
       <LegalFooter brand={brand} />
