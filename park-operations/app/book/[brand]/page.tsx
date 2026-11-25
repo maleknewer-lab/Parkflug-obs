@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { loadPublicBrand, quoteForBrand } from "@/lib/booking/public-quote";
+import { loadPublicBrand, safeQuoteForBrand } from "@/lib/booking/public-quote";
 import { quoteQueryString } from "@/lib/booking/quote";
 import { formatEuro } from "@/lib/rates/form";
 import { LegalFooter } from "@/app/book/_components/legal-footer";
@@ -34,7 +34,7 @@ export default async function PublicBookingPage({
     const v = sp[name];
     return (Array.isArray(v) ? v[0] : v) ?? "";
   };
-  const quote = await quoteForBrand(brand, get, new Date());
+  const quote = await safeQuoteForBrand(brand, get, new Date());
 
   const showSeats = brand.rates.some((r) => r.seatsEnabled ?? brand.seatsEnabled);
   const selectedRate = get("rateId");
