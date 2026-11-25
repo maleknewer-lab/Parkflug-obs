@@ -210,6 +210,7 @@ export async function createPublicBookingAction(_prev: CheckoutState, fd: FormDa
     const digest = typeof e === "object" && e !== null && "digest" in e ? String((e as { digest: unknown }).digest) : "";
     if (digest.startsWith("NEXT_REDIRECT")) throw e;
     console.error("[public-booking] failed:", e);
-    return { error: "Die Buchung konnte gerade nicht gespeichert werden. Bitte versuchen Sie es in einem Moment erneut." };
+    const detail = process.env.PUBLIC_DEBUG === "1" && e instanceof Error ? ` [${e.name}: ${e.message.slice(0, 400)}]` : "";
+    return { error: `Die Buchung konnte gerade nicht gespeichert werden. Bitte versuchen Sie es in einem Moment erneut.${detail}` };
   }
 }
