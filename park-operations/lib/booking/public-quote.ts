@@ -105,6 +105,9 @@ export async function safeQuoteForBrand(
     return await quoteForBrand(brand, get, now);
   } catch (e) {
     console.error("[public-quote] failed:", e);
-    return { state: "error", error: "Der Preis konnte gerade nicht berechnet werden. Bitte versuchen Sie es in einem Moment erneut." };
+    // Staging only: with PUBLIC_DEBUG=1 in the environment the real cause is shown on the page.
+    // Remove the variable again before the pages go public.
+    const detail = process.env.PUBLIC_DEBUG === "1" && e instanceof Error ? ` [${e.name}: ${e.message.slice(0, 400)}]` : "";
+    return { state: "error", error: `Der Preis konnte gerade nicht berechnet werden. Bitte versuchen Sie es in einem Moment erneut.${detail}` };
   }
 }
