@@ -9,6 +9,7 @@
 import { Prisma } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { generateUniqueBookingCode } from "@/lib/booking";
+import { readConsent, shouldStoreSmsOptIn, TERMS_VERSION } from "@/lib/booking/consent";
 import { parsePublicBookingForm } from "@/lib/booking/public-form";
 import { loadPublicBrand, quoteForBrand } from "@/lib/booking/public-quote";
 import { breakdownJson } from "@/lib/booking/server";
@@ -40,6 +41,10 @@ async function createPublicBookingInner(fd: FormData): Promise<CheckoutState> {
 
   const checkoutKey = text("checkoutKey");
   if (!UUID.test(checkoutKey)) return fail("Die Sitzung ist abgelaufen. Bitte laden Sie die Seite neu.");
+
+  // Consent: AGB + Datenschutz are mandatory, the SMS opt-in is optional and never pre-ticked
+  const consent = readConsent(text);
+  if (!consent.terms) return fail("Bitte akzeptieren Sie AGB und Datenschutz.");
 
   // Double click / retry: the same key returns the booking that already exists
   const existing = await db.booking.findUnique({
@@ -116,6 +121,13 @@ async function createPublicBookingInner(fd: FormData): Promise<CheckoutState> {
         customer = await tx.customer.update({ where: { id: customer.id }, data: { phone: d.phone } });
       }
 
+      if (shouldStoreSmsOptIn(consent, customer.phone, d.phone) && !customer.smsOptInAt) {
+        customer = await tx.customer.update({
+          where: { id: customer.id },
+          data: { smsOptInAt: now, smsOptInSource: "website_booking", smsOptOutAt: null },
+        });
+      }
+
       return tx.booking.create({
         data: {
           code,
@@ -148,6 +160,8 @@ async function createPublicBookingInner(fd: FormData): Promise<CheckoutState> {
           billingAddress: d.billingAddress,
           billingVatId: d.billingVatId,
           source: "WEBSITE",
+          termsAcceptedAt: now,
+          termsVersion: TERMS_VERSION,
           extras: {
             create: quote.extras.map((e) => ({ extraId: e.extraId, quantity: e.quantity, priceCents: e.priceCents })),
           },
@@ -182,6 +196,8 @@ async function createPublicBookingInner(fd: FormData): Promise<CheckoutState> {
           departureAt: { from: null, to: d.departureAt.toISOString() },
           source: { from: null, to: "WEBSITE" },
           paymentMethod: { from: null, to: booking.paymentMethod },
+          termsVersion: { from: null, to: TERMS_VERSION },
+          smsOptIn: { from: null, to: consent.smsOptIn },
         } as unknown as Prisma.InputJsonObject,
       },
     });
