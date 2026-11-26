@@ -3,12 +3,13 @@
 // offered to other companies, each company gets its own account row and nothing here changes.
 import { db } from "@/lib/db";
 import { readStripeKeys, type StripeKeys } from "@/lib/stripe/env";
+import { onlineStatus } from "./status";
 
 export type AccountRef = { id: string; slug: string; name: string; envKey: string; active: boolean };
 
 /** Is online payment possible for this account right now? (account active AND all three keys present) */
 export function onlineAvailable(account: Pick<AccountRef, "active" | "envKey"> | null): boolean {
-  return !!account && account.active && readStripeKeys(account.envKey, process.env) !== null;
+  return onlineStatus(account, process.env) === "ok";
 }
 
 export function keysFor(account: Pick<AccountRef, "envKey">): StripeKeys | null {
