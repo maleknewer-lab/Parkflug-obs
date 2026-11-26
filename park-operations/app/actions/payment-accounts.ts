@@ -55,7 +55,8 @@ export async function updatePaymentAccountAction(fd: FormData) {
   const active = fd.get("active") === "on";
   const clash = await db.paymentAccount.findFirst({ where: { slug: f.slug, NOT: { id } }, select: { id: true } });
   if (clash) back("error", "Dieses Kürzel gibt es schon");
-  const next = { ...f, active };
+  const paypalEnabled = fd.get("paypalEnabled") === "on";
+  const next = { ...f, active, paypalEnabled };
   const changes = diffFields(old, next, Object.keys(next) as (keyof typeof next)[]);
   await db.paymentAccount.update({ where: { id }, data: next });
   await log(me.id, id, "update", changes);

@@ -14,7 +14,9 @@ import { parsePublicBookingForm } from "@/lib/booking/public-form";
 import { loadPublicBrand, quoteForBrand } from "@/lib/booking/public-quote";
 import { breakdownJson } from "@/lib/booking/server";
 import { db } from "@/lib/db";
-import { keysFor, onlineAvailable } from "@/lib/payments/account";
+import { keysFor } from "@/lib/payments/account";
+import { methodsFor, parsePaymentChoice, stripeTypesFor } from "@/lib/payments/methods";
+import { onlineStatus } from "@/lib/payments/status";
 import { MIN_ONLINE_CENTS } from "@/lib/payments/rules";
 import { cancelPaymentIntent, createPaymentIntent, StripeApiError, type StripeIntent } from "@/lib/stripe/client";
 
@@ -60,12 +62,13 @@ async function createPublicBookingInner(fd: FormData): Promise<CheckoutState> {
   const quote = await quoteForBrand(brand, text, now);
   if (quote.state !== "ok") return fail(quote.state === "error" ? quote.error : "Bitte zuerst die Reisedaten angeben");
 
-  // Payment choice: online only if this brand has an active payment account with all keys configured
-  const online = text("payment") === "ONLINE";
+  // Payment choice: the customer picks the method first. Online methods exist only if this brand has an active
+  // payment account with all keys configured (PayPal additionally needs the account's PayPal switch).
   const account = brand.paymentAccount;
-  if (online && !onlineAvailable(account)) {
-    return fail("Online-Zahlung ist zurzeit nicht verfügbar. Bitte wählen Sie Barzahlung vor Ort.");
-  }
+  const methods = methodsFor(onlineStatus(account, process.env), account);
+  const choice = parsePaymentChoice(text("payment"), methods);
+  if (!choice) return fail("Bitte wählen Sie eine Zahlungsart. Diese Zahlungsart ist zurzeit nicht verfügbar.");
+  const online = choice !== "CASH";
   if (online && quote.result.totalCents < MIN_ONLINE_CENTS) {
     return fail("Online-Zahlung ist erst ab 0,50 € möglich. Bitte wählen Sie Barzahlung vor Ort.");
   }
@@ -97,6 +100,7 @@ async function createPublicBookingInner(fd: FormData): Promise<CheckoutState> {
         brandSlug: brand.slug,
         description: `${brand.name} ${code}`,
         statementDescriptor: brand.statementDescriptor, // from the brand settings
+        methodTypes: stripeTypesFor(choice as "CARD" | "PAYPAL"),
         idempotencyKey: `pi-${checkoutKey}`,
       });
     } catch (e) {
