@@ -20,6 +20,7 @@ export async function loadPublicBrand(slug: string) {
       impressumUrl: true,
       privacyUrl: true,
       minLeadHours: true,
+      freeCancelHours: true,
       seatsEnabled: true,
       statementDescriptor: true,
       paymentAccount: { select: { id: true, slug: true, name: true, envKey: true, active: true } },
