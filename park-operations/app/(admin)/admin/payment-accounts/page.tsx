@@ -48,6 +48,9 @@ export default async function PaymentAccountsPage({
               {row("Publishable Key", names.publishableKey, st.publishableKey)}
             </ul>
             <span className="muted">
+              Zahlarten für Kunden: Karte (Visa, Mastercard, Amex, Apple Pay, Google Pay){a.paypalEnabled ? " · PayPal" : " · PayPal aus"}
+            </span>
+            <span className="muted">
               Webhook-Adresse für Stripe (Events: <code>payment_intent.succeeded</code>, <code>payment_intent.canceled</code>):{" "}
               <code>/api/stripe/webhook/{a.slug}</code> auf Ihrer Domain.
             </span>
@@ -62,6 +65,9 @@ export default async function PaymentAccountsPage({
                 </div>
                 <label style={{ display: "flex", gap: 8, alignItems: "center", minHeight: 44 }}>
                   <input type="checkbox" name="active" defaultChecked={a.active} /> Aktiv
+                </label>
+                <label style={{ display: "flex", gap: 8, alignItems: "center", minHeight: 44 }}>
+                  <input type="checkbox" name="paypalEnabled" defaultChecked={a.paypalEnabled} /> PayPal anbieten (nur ankreuzen, wenn PayPal im Stripe-Dashboard aktiviert ist)
                 </label>
                 <button className="btn" type="submit">Speichern</button>
               </form>
