@@ -14,6 +14,6 @@ export function readConsent(get: (name: string) => string): Consent {
  * somebody else in by typing their e-mail, so the opt-in is stored only when the customer record's
  * phone number is the number typed in this form.
  */
-export function shouldStoreSmsOptIn(consent: Consent, customerPhone: string | null, formPhone: string): boolean {
-  return consent.smsOptIn && customerPhone !== null && customerPhone === formPhone;
+export function shouldStoreSmsOptIn(consent: Consent, customerPhone: string | null, formPhone: string | null): boolean {
+  return consent.smsOptIn && customerPhone !== null && formPhone !== null && customerPhone === formPhone;
 }
