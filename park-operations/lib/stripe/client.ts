@@ -64,16 +64,18 @@ export async function createPaymentIntent(
     brandSlug: string;
     description: string;
     statementDescriptor: string | null; // from the brand settings
+    /** Stripe payment method types the customer chose: ["card"] or ["paypal"] */
+    methodTypes: string[];
     idempotencyKey: string;
   },
 ): Promise<StripeIntent> {
   const base: StripeParams = {
     amount: a.amountCents,
     currency: "eur",
-    // Card, PayPal, Apple Pay … = whatever is enabled in the Stripe dashboard of this account
-    automatic_payment_methods: { enabled: true },
+    // Only the method the customer chose on our form (card incl. Apple Pay / Google Pay, or PayPal)
+    payment_method_types: a.methodTypes,
     description: a.description,
-    metadata: { bookingCode: a.bookingCode, checkoutKey: a.checkoutKey, brand: a.brandSlug },
+    metadata: { bookingCode: a.bookingCode, checkoutKey: a.checkoutKey, brand: a.brandSlug, method: a.methodTypes.join(",") },
   };
   try {
     return await stripeRequest<StripeIntent>(secretKey, "POST", "/v1/payment_intents", {
