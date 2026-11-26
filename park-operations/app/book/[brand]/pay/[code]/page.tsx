@@ -36,12 +36,8 @@ export default async function PayPage({ params }: { params: Promise<{ brand: str
   if (!booking) notFound();
   if (booking.paymentMethod !== "ONLINE" || booking.status === "confirmed") redirect(`/book/${slug}/booked/${code}`);
 
-  const head = (
-    <header className="pub-head"><h1>{booking.brand.name}</h1></header>
-  );
   const problem = (message: string) => (
     <main className="pub-wrap">
-      {head}
       <div className="pub-error" role="alert">⚠ {message}</div>
       <a className="pub-btn" href={`/book/${slug}`}>Neue Buchung starten</a>
       <LegalFooter brand={booking.brand} />
@@ -72,7 +68,6 @@ export default async function PayPage({ params }: { params: Promise<{ brand: str
 
   return (
     <main className="pub-wrap">
-      {head}
       <section className="pub-card">
         <h2>Zahlung für Buchung {booking.code}</h2>
         <div className="pub-sum">
