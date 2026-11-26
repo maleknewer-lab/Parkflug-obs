@@ -377,6 +377,10 @@ model Booking {
   // returns the same booking instead of creating a second one.
   checkoutKey String? @unique
 
+  // Consent given in the public booking form (AGB + Datenschutz). The wording is versioned.
+  termsAcceptedAt DateTime?
+  termsVersion    String?
+
   rebookedFromId String?
   rebookedFrom   Booking?  @relation("Rebook", fields: [rebookedFromId], references: [id])
   rebookings     Booking[] @relation("Rebook")
