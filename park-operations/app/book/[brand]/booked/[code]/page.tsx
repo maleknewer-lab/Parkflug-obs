@@ -57,7 +57,6 @@ export default async function BookedPage({ params }: { params: Promise<{ brand: 
   const waitingForPayment = online && booking.status === "unconfirmed";
   return (
     <main className="pub-wrap">
-      <header className="pub-head"><h1>{booking.brand.name}</h1></header>
 
       <section className="pub-card">
         <h2>
