@@ -114,6 +114,8 @@ model PaymentAccount {
   name   String
   envKey String
   active Boolean @default(true)
+  // PayPal must be activated in the Stripe dashboard first; only then is it offered to customers
+  paypalEnabled Boolean @default(false)
   createdAt DateTime @default(now())
 
   brands   Brand[]
