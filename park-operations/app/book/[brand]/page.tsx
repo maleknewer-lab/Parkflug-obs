@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { loadPublicBrand } from "@/lib/booking/public-quote";
+import { methodsFor } from "@/lib/payments/methods";
 import { ONLINE_HINT, onlineStatus } from "@/lib/payments/status";
 import { toBerlinLocalInput } from "@/lib/pricing";
 import { optionalStaff } from "@/lib/staff-optional";
@@ -42,7 +43,7 @@ export default async function PublicBookingPage({ params }: { params: Promise<{ 
           extras={brand.extras}
           showSeats={brand.rates.some((r) => r.seatsEnabled ?? brand.seatsEnabled)}
           freeCancelHours={brand.freeCancelHours}
-          onlineAvailable={status === "ok"}
+          methods={methodsFor(status, brand.paymentAccount)}
           onlineHint={staff && status !== "ok" ? ONLINE_HINT[status] : null}
           checkoutKey={crypto.randomUUID()}
           termsUrl={brand.termsUrl}

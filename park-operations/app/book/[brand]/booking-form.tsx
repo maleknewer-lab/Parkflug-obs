@@ -37,7 +37,7 @@ export function BookingForm(props: {
   extras: ExtraOpt[];
   showSeats: boolean;
   freeCancelHours: number;
-  onlineAvailable: boolean;
+  methods: { card: boolean; paypal: boolean }; // online methods the brand can take right now
   onlineHint: string | null; // only given to logged-in staff
   checkoutKey: string;
   termsUrl: string | null;
@@ -64,7 +64,7 @@ export function BookingForm(props: {
   const [coupon, setCoupon] = useState("");
 
   // Choices that must survive a reset of the form after an error
-  const [payment, setPayment] = useState<"ONLINE" | "CASH">(props.onlineAvailable ? "ONLINE" : "CASH");
+  const [payment, setPayment] = useState<"CARD" | "PAYPAL" | "CASH">(props.methods.card ? "CARD" : "CASH");
   const [terms, setTerms] = useState(false);
   const [sms, setSms] = useState(false);
 
@@ -254,6 +254,7 @@ export function BookingForm(props: {
         {/* 5 · Extras */}
         <section>
           <div className="pub-step-h"><span>5</span>Extras</div>
+          {extras.length === 0 && <div className="pub-meta">Für diese Marke gibt es keine zusätzlichen Extras.</div>}
           {extras.length > 0 && (
             <div style={{ display: "grid", gap: 8 }}>
               {extras.map((e) => (
@@ -265,27 +266,35 @@ export function BookingForm(props: {
               ))}
             </div>
           )}
-          <label className="pub-field" style={{ marginTop: 10 }}>Gutschein
-            <input className="pub-inp pub-mono" name="couponCode" autoComplete="off" placeholder="Code" value={coupon}
-              onChange={(e) => setCoupon(e.target.value)} maxLength={40} />
-          </label>
         </section>
 
         {/* 6 · Zahlung */}
         <section>
           <div className="pub-step-h"><span>6</span>Zahlung</div>
+          <div className="pub-meta" style={{ marginBottom: 8 }}>Bitte wählen Sie zuerst, wie Sie bezahlen möchten.</div>
           <div className="pub-pay">
-            {props.onlineAvailable && (
+            {props.methods.card && (
               <label>
-                <input type="radio" name="payment" value="ONLINE" checked={payment === "ONLINE"} onChange={() => setPayment("ONLINE")} />
-                Online · Karte, PayPal, Apple Pay
+                <input type="radio" name="payment" value="CARD" checked={payment === "CARD"} onChange={() => setPayment("CARD")} />
+                <span>Karte<small>Visa, Mastercard, Amex, Apple Pay, Google Pay</small></span>
+              </label>
+            )}
+            {props.methods.paypal && (
+              <label>
+                <input type="radio" name="payment" value="PAYPAL" checked={payment === "PAYPAL"} onChange={() => setPayment("PAYPAL")} />
+                <span>PayPal<small>Zahlung über Ihr PayPal-Konto</small></span>
               </label>
             )}
             <label>
               <input type="radio" name="payment" value="CASH" checked={payment === "CASH"} onChange={() => setPayment("CASH")} />
-              Bar vor Ort
+              <span>Bar vor Ort<small>Sie zahlen bei Ankunft am Parkplatz</small></span>
             </label>
           </div>
+          {payment !== "CASH" && (
+            <div className="pub-meta" style={{ marginTop: 8 }}>
+              Nach „Weiter zur Zahlung“ geben Sie Ihre Zahlungsdaten sicher bei Stripe ein. Ihre Buchung wird nach erfolgreicher Zahlung bestätigt.
+            </div>
+          )}
           {props.onlineHint && <div className="pub-banner warn" style={{ marginTop: 10 }}>{props.onlineHint}</div>}
 
           <label className="pub-check" style={{ marginTop: 12 }}>
@@ -306,7 +315,7 @@ export function BookingForm(props: {
 
           {state.error && <div className="pub-error" role="alert" style={{ marginTop: 12 }}>⚠ {state.error}</div>}
           <button type="submit" className="pub-btn go lg" disabled={pending} style={{ marginTop: 12 }}>
-            {pending ? "Bitte warten …" : payment === "ONLINE" ? "Weiter zur Zahlung" : "Verbindlich buchen"}
+            {pending ? "Bitte warten …" : payment === "CASH" ? "Verbindlich buchen" : "Weiter zur Zahlung"}
           </button>
         </section>
       </div>
@@ -328,6 +337,12 @@ export function BookingForm(props: {
         ) : (
           <div className="pub-meta">{loading ? "Preis wird berechnet …" : "Der Preis erscheint, sobald die Reisedaten stimmen."}</div>
         )}
+        <label className="pub-field" style={{ marginTop: 4 }}>
+          Gutscheincode einlösen (optional)
+          <input className="pub-inp pub-mono" name="couponCode" autoComplete="off" placeholder="Rabattcode" value={coupon}
+            onChange={(e) => setCoupon(e.target.value)} maxLength={40} />
+          <span className="pub-meta">Nur für Rabattcodes – die Zahlungsart wählen Sie in Schritt 6.</span>
+        </label>
         <div className="pub-banner">Kostenlos stornieren bis {props.freeCancelHours} Std. vor Ankunft.</div>
       </aside>
     </form>
