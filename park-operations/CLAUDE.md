@@ -58,6 +58,11 @@ When the spec and this file disagree, **this file wins** (it is newer).
 - **Discounts:** a coupon or the returning-customer discount applies to the **full subtotal** (parking + oversize + extra persons + seats + extras). They are **never stacked**: the larger one wins. The oversize surcharge is calculated on the parking price only.
 - Dynamic pricing (later phase): surcharge by occupancy thresholds (e.g. ≥70 % +5 %, ≥85 % +10 %, ≥95 % +20 %), configurable per lot.
 
+### Admin screens (decided layout)
+- **Buchungen** (`/admin/bookings`): header with "+ Neue Buchung", search + scope, status tabs (Alle / Bestätigt / Unbestätigt / Storniert), one table (Nr., Kunde with tap-to-call and note chips, Fahrzeug, Zeitraum, Tarif · Quelle, Status, Preis). **Neue Buchung**: pick the rate cards, then numbered steps. **Booking page**: header with status chips, cards for Kunde, Reise & Fahrzeug, Preis, Preisprüfung, Notizen, edit, cancel, Verlauf. **Kunden**: search + table (Telefon, Kennzeichen, Buchungen with "Stammkunde", Werbung chips).
+- **Tarife & Preise**: header, brand switch (`?brand=`), "Personen & Kindersitze" + "Regeln & Zuschläge", one card per rate with its 1–30 day price grid and "Jeder weitere", extras, legal links, payment & sender. Every form sends `returnBrand` so saving stays on the same brand. Seasons and occupancy pricing: Phase 7.
+- **Zahlungskonten**: per account the three key variables (✅/❌), test/live mode, brands using it, "Online-Zahlung bereit".
+
 ### Cancellation
 - **Free cancellation up to 24 hours before arrival.**
 - **Less than 24 hours before arrival: full price, no refund.**
@@ -93,7 +98,10 @@ When the spec and this file disagree, **this file wins** (it is newer).
 - Booking statuses: `unconfirmed`, `confirmed`, `cancelled`.
 - Transfer statuses (in order): `expected` → `arrived_at_lot` → `taken_to_airport` → `waiting_for_pickup` → `back_at_lot` → `departed`.
 - Minimum lead time for online booking: 2 hours (`Brand.minLeadHours`). Bookings created by staff in the admin are not limited by it.
-- **Public booking (website):** step 1 `/book/<brand slug>` shows the price (GET form, no personal data in the URL); step 2 `/book/<slug>/checkout` asks for customer data (POST). Price, rate, lead time and every system field (status, source, payment, paid) are decided by the server; the form only passes an allow-list of fields (`lib/booking/public-form.ts`). Phone is required. A double click returns the same booking (`Booking.checkoutKey`). A visitor never overwrites an existing customer (same e-mail = same customer; only an empty phone is filled).
+- **Public booking (website):** one page `/book/<brand slug>` with six steps (Reise, Tarif, Ihre Daten, Hinweis, Extras, Zahlung) and a live summary, as in `docs/prototype.html`. The live price comes from the server (`quotePublicAction` → `lib/pricing`); the booking recalculates it again. Price, rate, lead time and every system field (status, source, payment, paid) are decided by the server; the form only passes an allow-list of fields (`lib/booking/public-form.ts`). Phone is required. A double click returns the same booking (`Booking.checkoutKey`). A visitor never overwrites an existing customer (same e-mail = same customer; only an empty phone is filled).
+- **The customer chooses the payment method first** (step 6): Karte (Visa, Mastercard, Amex, Apple Pay, Google Pay), PayPal, or Bar vor Ort. For an online choice the Stripe payment intent is created for exactly that method (`payment_method_types` = `["card"]` or `["paypal"]`). PayPal is offered only when the payment account has `paypalEnabled` (tick it only after PayPal is activated in the Stripe dashboard). Rules: `lib/payments/methods.ts`. Online methods appear only when the brand has an active payment account and all three key variables exist (admin → Zahlungskonten shows ✅/❌ per variable). The coupon field sits in the booking summary.
+- **Consent in the booking form:** AGB + Datenschutz must be ticked (stored as `Booking.termsAcceptedAt` + `termsVersion`, `TERMS_VERSION` in `lib/booking/consent.ts`); the SMS/WhatsApp opt-in box is never pre-ticked and is stored on the customer (`smsOptInAt`, `smsOptInSource`) **only if the customer's phone number is the number typed in the form**; the e-mail objection notice (UWG §7(3)) is shown in the form. **Wording is provisional until a lawyer has checked it.**
+- Public pages have the topbar (brand logo + name, light/dark switch). Logged-in staff additionally get the ☰ menu there and, while testing, see why "Online" is missing; visitors never see this.
 - Cash bookings from the website are `confirmed` at once (not paid, payment cash). Online bookings stay `unconfirmed` until the webhook confirms the payment. The confirmation page `/book/<slug>/booked/<code>` shows no personal data.
 - Unpaid online bookings (payment not completed) are cancelled automatically after 30 minutes and the capacity is released (configurable per brand: `Brand.unpaidHoldMinutes`).
 - Footer of the booking pages links to the brand's Impressum, Datenschutz and AGB on its WordPress site (URLs are per-brand settings in admin → Tarife & Preise → "Rechtliche Links & Online-Buchung"; only `https://` URLs accepted).
@@ -199,7 +207,7 @@ Each phase ends with something usable on **staging**, shown to Fawaz, before the
 | 0 | Spec & prototype | Agree on what we build | Spec PDF + clickable prototype approved | ✅ Done |
 | 1 | Foundation | Repo, stack, DB, auth, deploy | Next.js app on staging, Prisma schema for core model, email login with 3 roles (admin / Büro / Fahrer) and server-side permissions, CI (lint, typecheck, tests) | ✅ Done — running on Render, 3 logins (admin / Büro / Fahrer) created |
 | 2 | Bookings & admin core | Staff can create and manage bookings | Rates & price tables in admin, price calculation with tests, create/edit/cancel booking in admin, bookings list with search & filters, customers list, both notes | 🟡 Code complete (2026-11-24) — awaiting test on staging and review by Fawaz. Done: schema, seed, `lib/pricing`, `lib/booking`, price admin, booking create / edit / cancel with history and price re-check, bookings list and customers list |
-| 3 | Online booking + payment | Customers book themselves | Public booking form per brand, Stripe payment + webhooks, cash option, confirmation email with QR, customer cancel page with 24 h rule + automatic refund | 🟡 In progress (2026-11-25). Deployed on Render: PR 1 price page, PR 2a checkout + cash booking + company model + legal links, PR 2b online payment (payment accounts, Stripe, webhook, expiry cron). **Not yet tested end-to-end** with Stripe test mode. Open: PR 3 e-mail + QR, PR 4 manage page + refund + rate limiting, PR 5 terms / objection notice / SMS opt-in |
+| 3 | Online booking + payment | Customers book themselves | Public booking form per brand, Stripe payment + webhooks, cash option, confirmation email with QR, customer cancel page with 24 h rule + automatic refund | 🟡 In progress (2026-11-26). Deployed on Render: PR 1 price page, PR 2a checkout + cash booking + company model + legal links, PR 2b online payment (payment accounts, Stripe, webhook, expiry cron). The public pages and the price calculation work on staging (reported 2026-11-26). **Cash booking and online payment not yet confirmed end-to-end** (record the result here). Open: PR 3 e-mail + QR, PR 4 manage page + refund + rate limiting, PR 5 terms / objection notice / SMS opt-in |
 | 4 | Daily operations | Replace WhatsApp in daily work | Dashboard, transfer list (arrivals/pickups, overdue, notes), driver PWA with check-in/out, photos, signature, handover protocol email, Tageskasse (Bar/EC/Online/Partner, per employee, day closing), shifts & attendance, transfer filters Shuttle/Valet + Parkhaus/Außenparkplatz, tap-to-call | ⬜ |
 | 5 | Invoices & reports | Clean books for the tax advisor | GoBD invoices + storno, automatic invoice emails, monthly ZIP/Excel export, revenue reports by source and payment method, stock-style revenue chart (admin) | ⬜ |
 | 6 | Notifications & flights | Fewer calls, on-time pickups | SMS/email before arrival, SMS after landing, flight-status integration, thank-you/review email (Trustpilot link) | ⬜ |
@@ -209,8 +217,10 @@ Each phase ends with something usable on **staging**, shown to Fawaz, before the
 
 Priority rule: **Phase 1 → 4 is the MVP.** Do not start Phase 6+ features before Phase 4 is in daily use.
 
-### Current state (2026-11-25) — read this first in a new session
+### Current state (2026-11-26) — read this first in a new session
 - **Live on Render:** Phases 1–2, and Phase 3 PR 1 / 2a / 2b. The public pages work (`/book/<slug>`; the slug is shown in admin → Tarife & Preise).
+- **Diagnostics built in:** the public price page, the checkout action and the confirmation page catch unexpected errors, show a friendly German message and log the real cause with the tags `[public-quote]`, `[public-booking]`, `[booked-page]` (Render → Logs). `app/book/error.tsx` shows an error code (digest). Environment variable `PUBLIC_DEBUG=1` additionally prints the error text on the page — **staging only, remove it before the pages are public.**
+- **Before the pages go public:** deactivate the seed rates and extra whose names start with `[PLACEHOLDER]` (Tarife & Preise), remove `PUBLIC_DEBUG`.
 - **To do before Phase 3 can be called tested** (Fawaz + brother, on staging, test mode only):
   1. Admin → Zahlungskonten: create "Park Gruppe" (slug `park-gruppe`, env key `DEFAULT`) and assign it to the brands in Tarife & Preise → "Zahlung & Absender"; fill statement text and sender fields.
   2. Render environment: `STRIPE_WEBHOOK_SECRET` (from the Stripe webhook endpoint `<domain>/api/stripe/webhook/park-gruppe`, events `payment_intent.succeeded` + `payment_intent.canceled`) and `CRON_SECRET` (long random text). Check ✅ on the Zahlungskonten page.
@@ -228,6 +238,7 @@ Priority rule: **Phase 1 → 4 is the MVP.** Do not start Phase 6+ features befo
   - What changed and why (1–3 sentences, plain language Fawaz can understand)
   - How it was tested
   - Screenshots for UI changes
+  - Design check (rule 7): which prototype screen it matches
   - Whether CLAUDE.md was updated
 - **Commits:** small, English, descriptive (`feat: add 24h cancellation rule`).
 - **Staging first:** every change is tested on staging before production. Nobody edits production directly.
@@ -235,6 +246,7 @@ Priority rule: **Phase 1 → 4 is the MVP.** Do not start Phase 6+ features befo
 - **Claude** writes code, proposes PRs and explains changes; the brother reviews, tests and deploys. Claude never deploys to production on its own.
 - **Render build command (staging):** `npm install && npx prisma generate && npx prisma db push && npx prisma db execute --file prisma/partial-index.sql --schema prisma/schema.prisma && npm run build`. `prisma migrate deploy` does NOT work here (no migration files). If `db push` stops with a data-loss warning, read it first; for a harmless one (e.g. a new unique constraint on a new nullable column) add `--accept-data-loss` for ONE deploy and remove it again. Real migrations are introduced before production (Phase 9).
 - **Uploads from a tablet:** the GitHub upload once dropped the parentheses of a route-group folder (`(public)` became `public` and the pages returned 404). Rules: no NEW folders with parentheses; after every upload check the folder names and paths in GitHub (`park-operations/app/...`). Existing groups `(admin)` and `(staff)` stay as they are.
+- **Stray files:** an empty file named `rules` (no extension) once sat next to `lib/booking/rules.ts`; the production bundle imported the empty file and the price page failed with `checkLeadTime is not a function` while the type check and the build passed. After every upload, look for files without extension or with a 1-byte size next to real modules, and delete them. When a runtime error says "X is not a function" for code that exists, suspect a shadowing file first.
 
 ---
 
@@ -246,6 +258,11 @@ Priority rule: **Phase 1 → 4 is the MVP.** Do not start Phase 6+ features befo
 4. **Every new decision goes into this file** (section 3/4/5 and the Decision log) in the same PR.
 5. When something is unclear, **ask Fawaz** instead of guessing — especially prices, legal and money topics.
 6. Do not copy ParkStar's code, texts or design. We copy features and workflows only.
+7. **Every page follows the approved design** (`docs/prototype.html`, clickable demo "X-Park Buchungssystem Demo"; and the static screens in `docs/ui-html/`). A page is not finished until it has been compared with the matching prototype screen (layout, header, controls, chips, spacing, light + dark mode, phone width). How:
+   - **Admin/staff pages** live in `app/(admin)/admin/` (the layout there gives them the header and menu) and use the shared UI kit `app/(admin)/admin/admin-ui.css` (`ui-*` classes: `ui-ph` page header, `card pad`, `ui-tbl` tables, `ui-seg` tabs, `ui-chip`, `ui-steps`/`ui-step-h` numbered forms, `ui-kv`, `ui-details` …) and the form pieces in `app/(admin)/admin/rates/ui.tsx` (`Field`, `Check`, `TriSelect`, `Message`). Pages under `app/(staff)/` get the same header from their layout.
+   - **Public pages** use `app/book/public.css` (`pub-*` classes) and the public header.
+   - No ad-hoc inline styles for layout or colours and no new one-off CSS per page; if the kit lacks something, add it to the kit once. Page-specific logic stays in the page, looks stay in the kit.
+   - Every PR that adds or changes a page says in its description which prototype screen it matches and shows a screenshot (phone + desktop, light + dark).
 
 ---
 
@@ -321,3 +338,9 @@ These do **not** block Phases 1–4. Build everything configurable and use clear
 | 2026-11-24 | PR 2b online payment: Stripe REST via fetch (no SDK), API version pinned `2024-06-20`; own HMAC signature check with tests; booking confirmed only by the webhook (amount/currency must match, else flagged); expiry cron cancels the intent first; a booking that expired while its payment arrived is re-confirmed (`payment_reconfirmed`); a rejected statement descriptor is retried without it; online payment needs ≥ 0,50 €. |
 | 2026-11-24 | Render build command uses `prisma db push` + `partial-index.sql` (not `migrate deploy`); `--accept-data-loss` only once for a harmless warning, then removed. |
 | 2026-11-25 | Public pages moved from `app/(public)/` to `app/book/` (no parentheses) because the tablet upload stripped the parentheses and the booking pages returned 404. Rule: no new folders with parentheses; check paths in GitHub after each upload. Footer imports use the alias `@/app/book/_components/legal-footer`. |
+| 2026-11-26 | Public pages catch unexpected errors, log the cause with a tag and show a friendly message; the price result is shown above the form so it is visible after the page reloads; `app/book/error.tsx` shows a digest code; `PUBLIC_DEBUG=1` (staging only) prints the error text on the page. |
+| 2026-11-26 | Incident: a stray empty file `lib/booking/rules` shadowed `rules.ts` in the production bundle (price page crashed). Deleted. Rule added in §6: check for stray files after every upload. |
+| 2026-11-26 | Public booking page redesigned to the prototype: one page, six steps, live summary via a server action; the old two-step checkout route redirects to it. Consent (AGB, SMS opt-in, objection notice) built in with provisional wording; terms version stored on the booking; SMS opt-in stored only for the owner of the typed phone number. |
+| 2026-11-26 | Header missing on admin pages: the Phase 2 pages sit in `app/(admin)/admin/` which had no layout. Added `app/(admin)/admin/layout.tsx` (same shell as `(staff)`). Public pages get their own topbar through `app/book/[brand]/layout.tsx`; staff see the ☰ menu there. |
+| 2026-11-26 | Payment method is chosen first on the booking form (Karte / PayPal / Bar); the Stripe intent is restricted to the chosen method; `PaymentAccount.paypalEnabled` switches PayPal on per account. Replaces the single "Online" choice with automatic payment methods. |
+| 2026-11-27 | **Design rule (§7 rule 7):** every page must follow the approved prototype design; shared UI kit `app/(admin)/admin/admin-ui.css` (`ui-*`) for admin pages, `app/book/public.css` (`pub-*`) for public pages; no one-off page styles; PRs state which prototype screen they match. Bookings list, new booking, booking page, customers, Tarife & Preise, rate page and Zahlungskonten rebuilt on the kit. |
