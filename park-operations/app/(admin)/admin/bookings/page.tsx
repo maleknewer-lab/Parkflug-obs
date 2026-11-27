@@ -9,12 +9,15 @@ import {
 import { db } from "@/lib/db";
 import { formatBerlin } from "@/lib/pricing";
 import { formatEuro } from "@/lib/rates/form";
-import { inputStyle } from "../rates/ui";
 import { Pager } from "./pager";
 
 const STATUS = { unconfirmed: "Unbestätigt", confirmed: "Bestätigt", cancelled: "Storniert" } as const;
+const STATUS_CHIP = { unconfirmed: "amber", confirmed: "ok", cancelled: "warn" } as const;
+const SOURCE = { WEBSITE: "Website", PHONE: "Telefon / WhatsApp", PARTNER_PORTAL: "Partner-Portal", XPARK: "X-Park" } as const;
+const TABS: [string, string][] = [["", "Alle"], ["confirmed", "Bestätigt"], ["unconfirmed", "Unbestätigt"], ["cancelled", "Storniert"]];
 
-// Bookings list (admin + dispo): search, filters, paging. Default view = upcoming bookings.
+// Bookings list (admin + dispo), laid out like the prototype: header with "+ Neue Buchung", search + status tabs,
+// one table. Default view = upcoming bookings. Server component, no client JS.
 export default async function BookingsPage({
   searchParams,
 }: {
@@ -45,7 +48,7 @@ export default async function BookingsPage({
       : Promise.resolve(null),
   ]);
 
-  // Filters that are kept when paging
+  // Filters that are kept when paging or switching the status tab
   const keep = {
     q: f.q || null,
     brand: f.brandId,
@@ -57,45 +60,52 @@ export default async function BookingsPage({
     to: f.to,
     customer: f.customerId,
   };
-  const moreOpen = Boolean(f.brandId || f.status || f.paid || f.from || f.to || f.dateField === "departure");
+  const tabHref = (status: string) => {
+    const qs = new URLSearchParams();
+    for (const [k, v] of Object.entries({ ...keep, status: status || null })) if (v) qs.set(k, v);
+    const s = qs.toString();
+    return s ? `/admin/bookings?${s}` : "/admin/bookings";
+  };
+  const moreOpen = Boolean(f.brandId || f.paid || f.from || f.to || f.dateField === "departure");
 
   return (
     <div className="page">
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
-        <h1 style={{ margin: 0 }}>Buchungen</h1>
-        <Link className="btn" href="/admin/bookings/new">+ Neue Buchung</Link>
+      <div className="ui-ph">
+        <div>
+          <h1>Buchungen</h1>
+          <p>{total} {total === 1 ? "Buchung" : "Buchungen"}</p>
+        </div>
+        <Link className="btn go" href="/admin/bookings/new">+ Neue Buchung</Link>
       </div>
 
       {customer && (
-        <div className="card pad">
+        <div className="ui-banner" style={{ background: "var(--brand-soft, #e6eaf2)", color: "var(--brand, #2f4a7d)" }}>
           Kunde: <b>{customer.firstName} {customer.lastName}</b> · <Link href="/admin/bookings">Filter entfernen</Link>
         </div>
       )}
 
-      <form method="get" className="card pad" style={{ display: "grid", gap: 12 }}>
+      <form method="get" className="ui-stack">
         {f.customerId && <input type="hidden" name="customer" value={f.customerId} />}
-        <input
-          type="search"
-          name="q"
-          defaultValue={f.q}
-          placeholder="Suche: Code, Name, Kennzeichen, E-Mail, Telefon …"
-          style={inputStyle}
-        />
-        <label style={{ display: "grid", gap: 4 }}>
-          <span>Zeitraum</span>
-          <select name="scope" defaultValue={f.scope} style={inputStyle}>
+        {f.status && <input type="hidden" name="status" value={f.status} />}
+        <div className="ui-bar">
+          <input className="ui-inp ui-search" type="search" name="q" defaultValue={f.q} aria-label="Suche"
+            placeholder="Suchen: Code, Name, Kennzeichen, E-Mail, Telefon" />
+          <select className="ui-inp" name="scope" defaultValue={f.scope} aria-label="Zeitraum" style={{ width: "auto" }}>
             <option value="upcoming">Anstehend (ab heute)</option>
             <option value="past">Vergangen</option>
             <option value="all">Alle</option>
           </select>
-        </label>
-        <details open={moreOpen}>
-          <summary style={{ cursor: "pointer", minHeight: 44, display: "flex", alignItems: "center" }}>Mehr Filter</summary>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12, paddingTop: 8 }}>
+          <button className="btn" type="submit">Suchen</button>
+          <Link className="btn soft" href="/admin/bookings">Zurücksetzen</Link>
+        </div>
+
+        <details className="ui-details card pad" open={moreOpen}>
+          <summary>Mehr Filter</summary>
+          <div className="ui-kgrid" style={{ paddingTop: 10 }}>
             {brands.length > 1 && (
-              <label style={{ display: "grid", gap: 4 }}>
+              <label className="ui-field">
                 <span>Marke</span>
-                <select name="brand" defaultValue={f.brandId ?? ""} style={inputStyle}>
+                <select className="ui-inp" name="brand" defaultValue={f.brandId ?? ""}>
                   <option value="">Alle</option>
                   {brands.map((b) => (
                     <option key={b.id} value={b.id}>{b.name}</option>
@@ -103,66 +113,98 @@ export default async function BookingsPage({
                 </select>
               </label>
             )}
-            <label style={{ display: "grid", gap: 4 }}>
-              <span>Status</span>
-              <select name="status" defaultValue={f.status ?? ""} style={inputStyle}>
-                <option value="">Alle</option>
-                <option value="confirmed">Bestätigt</option>
-                <option value="unconfirmed">Unbestätigt</option>
-                <option value="cancelled">Storniert</option>
-              </select>
-            </label>
-            <label style={{ display: "grid", gap: 4 }}>
+            <label className="ui-field">
               <span>Zahlung</span>
-              <select name="paid" defaultValue={f.paid ?? ""} style={inputStyle}>
+              <select className="ui-inp" name="paid" defaultValue={f.paid ?? ""}>
                 <option value="">Alle</option>
                 <option value="paid">Bezahlt</option>
                 <option value="open">Offen</option>
               </select>
             </label>
-            <label style={{ display: "grid", gap: 4 }}>
+            <label className="ui-field">
               <span>Datum bezieht sich auf</span>
-              <select name="field" defaultValue={f.dateField} style={inputStyle}>
+              <select className="ui-inp" name="field" defaultValue={f.dateField}>
                 <option value="arrival">Anreise</option>
                 <option value="departure">Abreise</option>
               </select>
             </label>
-            <label style={{ display: "grid", gap: 4 }}>
+            <label className="ui-field">
               <span>Von</span>
-              <input type="date" name="from" defaultValue={f.from ?? ""} style={inputStyle} />
+              <input className="ui-inp" type="date" name="from" defaultValue={f.from ?? ""} />
             </label>
-            <label style={{ display: "grid", gap: 4 }}>
+            <label className="ui-field">
               <span>Bis</span>
-              <input type="date" name="to" defaultValue={f.to ?? ""} style={inputStyle} />
+              <input className="ui-inp" type="date" name="to" defaultValue={f.to ?? ""} />
             </label>
           </div>
         </details>
-        <div style={{ display: "flex", gap: 8 }}>
-          <button className="btn" type="submit">Filtern</button>
-          <Link className="btn" href="/admin/bookings">Zurücksetzen</Link>
-        </div>
       </form>
 
-      <span className="muted">{total} {total === 1 ? "Buchung" : "Buchungen"}</span>
+      <nav className="ui-seg" aria-label="Status">
+        {TABS.map(([k, label]) => (
+          <Link key={k || "all"} href={tabHref(k)} className={(f.status ?? "") === k ? "on" : ""}>{label}</Link>
+        ))}
+      </nav>
 
-      {rows.length === 0 && <div className="card pad">Keine Buchungen gefunden.</div>}
-      {rows.map((b) => (
-        <Link
-          key={b.id}
-          href={`/admin/bookings/${b.id}`}
-          className="card pad"
-          style={{ display: "grid", gap: 2, opacity: b.status === "cancelled" ? 0.65 : 1 }}
-        >
-          <span>
-            <b>{b.code}</b> · {STATUS[b.status]}{b.paid ? " · bezahlt" : ""}
-          </span>
-          <span>{b.customer.firstName} {b.customer.lastName} · {b.plate}</span>
-          <span className="muted">{formatBerlin(b.arrivalAt)} → {formatBerlin(b.departureAt)}</span>
-          <span className="muted">
-            {b.brand.name} · {b.rate.name} · {b.adults + b.kids} Pers. · {formatEuro(b.priceCents)} €
-          </span>
-        </Link>
-      ))}
+      <div className="card ui-scroll">
+        <table className="ui-tbl">
+          <thead>
+            <tr>
+              <th>Nr.</th>
+              <th>Kunde</th>
+              <th>Fahrzeug</th>
+              <th>Zeitraum</th>
+              <th>Tarif · Quelle</th>
+              <th>Status</th>
+              <th className="r">Preis</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.length === 0 && (
+              <tr><td colSpan={7} className="ui-meta" style={{ padding: 18 }}>Keine Buchungen gefunden.</td></tr>
+            )}
+            {rows.map((b) => (
+              <tr key={b.id} className={b.status === "cancelled" ? "ui-dim" : ""}>
+                <td>
+                  <Link className="open ui-code" href={`/admin/bookings/${b.id}`}>{b.code}</Link>
+                  <div className="ui-meta">{formatBerlin(b.createdAt)}</div>
+                </td>
+                <td>
+                  <b>{b.customer.firstName} {b.customer.lastName}</b>
+                  {b.customer.phone && <div><a className="tel" href={`tel:${b.customer.phone}`}>{b.customer.phone}</a></div>}
+                  {(b.customerNote || b.internalNote) && (
+                    <div className="ui-chips">
+                      {b.customerNote && <span className="ui-chip amber">Kunden-Hinweis</span>}
+                      {b.internalNote && <span className="ui-chip violet">Intern</span>}
+                    </div>
+                  )}
+                </td>
+                <td>
+                  <span className="ui-plate">{b.plate}</span>
+                  <div className="ui-meta">
+                    {b.adults + b.kids} {b.adults + b.kids === 1 ? "Person" : "Personen"}
+                    {b.seatBaby + b.seatKind + b.seatBoost > 0 ? ` · ${b.seatBaby + b.seatKind + b.seatBoost} Sitz(e)` : ""}
+                  </div>
+                </td>
+                <td style={{ whiteSpace: "nowrap", fontSize: 13 }} className="ui-mono">
+                  {formatBerlin(b.arrivalAt)}
+                  <br />
+                  <span className="ui-meta">{formatBerlin(b.departureAt)}</span>
+                </td>
+                <td>
+                  {b.rate.name}
+                  <div className="ui-meta">{b.brand.name} · {SOURCE[b.source]}</div>
+                </td>
+                <td>
+                  <span className={`ui-chip ${STATUS_CHIP[b.status]}`}>{STATUS[b.status]}</span>
+                  {b.paid && <div className="ui-chips"><span className="ui-chip ok">bezahlt</span></div>}
+                </td>
+                <td className="r ui-price">{formatEuro(b.priceCents)} €</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <Pager basePath="/admin/bookings" params={keep} page={f.page} total={total} pageSize={PAGE_SIZE} />
     </div>

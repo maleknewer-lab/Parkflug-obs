@@ -18,10 +18,10 @@ export function Pager(props: {
   };
   if (pages <= 1) return null;
   return (
-    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
-      {props.page > 1 ? <Link className="btn" href={href(props.page - 1)}>← Zurück</Link> : <span />}
-      <span className="muted">Seite {props.page} von {pages}</span>
-      {props.page < pages ? <Link className="btn" href={href(props.page + 1)}>Weiter →</Link> : <span />}
+    <div className="ui-pager">
+      {props.page > 1 ? <Link className="btn soft" href={href(props.page - 1)}>← Zurück</Link> : <span />}
+      <span className="ui-meta">Seite {props.page} von {pages}</span>
+      {props.page < pages ? <Link className="btn soft" href={href(props.page + 1)}>Weiter →</Link> : <span />}
     </div>
   );
 }
