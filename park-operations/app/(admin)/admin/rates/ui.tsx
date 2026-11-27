@@ -1,8 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
-import "./rates.css";
 
 // Small shared form pieces for the price pages (server components, no client JS needed).
-// Styled by rates.css to match the approved prototype.
+// Styled by the shared kit admin-ui.css (loaded by app/(admin)/admin/layout.tsx).
 
 export const SERVICE_LABEL = { SHUTTLE: "Shuttle", VALET: "Valet" } as const;
 export const LOT_LABEL = { GARAGE: "Parkhaus", OUTDOOR: "Außenparkplatz" } as const;
@@ -37,10 +36,10 @@ export function Field(props: {
   text?: boolean;
 }) {
   return (
-    <label className="rt-field">
+    <label className="ui-field">
       <span>{props.label}</span>
       <input
-        className={`rt-inp${props.text ? "" : " rt-mono"}`}
+        className={`ui-inp${props.text ? "" : " ui-mono"}`}
         name={props.name}
         defaultValue={props.defaultValue}
         placeholder={props.placeholder}
@@ -48,14 +47,14 @@ export function Field(props: {
         inputMode={props.text ? undefined : "decimal"}
         autoComplete="off"
       />
-      {props.hint && <span className="rt-meta">{props.hint}</span>}
+      {props.hint && <span className="ui-meta">{props.hint}</span>}
     </label>
   );
 }
 
 export function Check(props: { label: string; name: string; checked: boolean }) {
   return (
-    <label className="rt-check">
+    <label className="ui-check">
       <input type="checkbox" name={props.name} defaultChecked={props.checked} />
       <span>{props.label}</span>
     </label>
@@ -66,9 +65,9 @@ export function Check(props: { label: string; name: string; checked: boolean }) 
 export function TriSelect(props: { label: string; name: string; value: boolean | null; brandValue: boolean }) {
   const current = props.value === null ? "inherit" : props.value ? "yes" : "no";
   return (
-    <label className="rt-field">
+    <label className="ui-field">
       <span>{props.label}</span>
-      <select className="rt-inp" name={props.name} defaultValue={current}>
+      <select className="ui-inp" name={props.name} defaultValue={current}>
         <option value="inherit">Wie Marke ({props.brandValue ? "Ja" : "Nein"})</option>
         <option value="yes">Ja</option>
         <option value="no">Nein</option>
@@ -78,7 +77,7 @@ export function TriSelect(props: { label: string; name: string; value: boolean |
 }
 
 export function Message(props: { saved?: string; error?: string }): ReactNode {
-  if (props.error) return <div className="rt-msg err" role="alert">⚠ {props.error}</div>;
-  if (props.saved) return <div className="rt-msg ok">✓ {props.saved === "1" ? "Gespeichert" : props.saved}</div>;
+  if (props.error) return <div className="ui-msg err" role="alert">⚠ {props.error}</div>;
+  if (props.saved) return <div className="ui-msg ok">✓ {props.saved === "1" ? "Gespeichert" : props.saved}</div>;
   return null;
 }
