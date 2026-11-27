@@ -1,3 +1,4 @@
+import "./admin-ui.css";
 import { AppShell } from "@/components/app-shell";
 import { logoutAction } from "@/app/actions/auth";
 import { navFor } from "@/lib/permissions";
@@ -6,6 +7,7 @@ import { requireUser } from "@/lib/session";
 
 // Header + menu for the admin pages in this folder (bookings, customers, rates, payment accounts).
 // Same shell as app/(staff)/layout.tsx. Each page still checks its own permission on the server.
+// admin-ui.css is the shared UI kit of the approved design: every admin page uses its `ui-*` classes.
 export default async function AdminPagesLayout({ children }: { children: React.ReactNode }) {
   const user = await requireUser();
   return (

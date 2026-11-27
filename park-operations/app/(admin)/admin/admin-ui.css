@@ -1,0 +1,92 @@
+/* Admin UI kit — the look of the approved prototype (docs/prototype.html). EVERY admin page uses these classes.
+   Uses the app's design tokens, with fallbacks. */
+.ui-ph h1 { margin: 0; font-size: 28px; font-weight: 650; letter-spacing: -.025em; }
+.ui-ph p { margin: 4px 0 0; color: var(--muted, #6b7482); }
+.ui-seg { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: 12px; background: var(--surface-2, #f1f3f6); border: 1px solid var(--line, #dfe3e8); }
+.ui-seg a { padding: 9px 15px; border-radius: 9px; font-weight: 600; font-size: 14px; color: var(--muted, #6b7482); text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; }
+.ui-seg a.on { background: var(--surface, #f8f9fa); color: var(--ink, #1f2733); box-shadow: 0 1px 2px rgba(0, 0, 0, .12); }
+.ui-sec-t { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; font-weight: 700; font-size: 15px; margin-bottom: 12px; }
+.ui-sec-t .big { font-size: 17px; }
+.ui-meta { font-size: 13px; color: var(--muted, #6b7482); }
+.ui-stack { display: grid; gap: 14px; }
+.ui-kgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; align-items: end; }
+.ui-field { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: var(--muted, #6b7482); }
+.ui-inp { width: 100%; min-width: 0; min-height: 44px; box-sizing: border-box; padding: 11px 13px; border-radius: 12px; border: 1px solid var(--line, #dfe3e8);
+  background: var(--surface, #f8f9fa); color: var(--ink, #1f2733); font: inherit; font-weight: 500; }
+.ui-inp:focus { outline: none; border-color: var(--brand, #2f4a7d); box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand, #2f4a7d) 18%, transparent); }
+.ui-mono { font-family: var(--font-geist-mono, ui-monospace, monospace); }
+.ui-check { display: flex; gap: 10px; align-items: center; min-height: 44px; padding: 10px 12px; border: 1px solid var(--line, #dfe3e8);
+  border-radius: 12px; background: var(--surface, #f8f9fa); font-size: 14px; font-weight: 500; color: var(--ink, #1f2733); }
+.ui-check input { width: 18px; height: 18px; accent-color: var(--accent, #3d8b6a); flex: none; }
+.ui-ptable { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
+.ui-ptable label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 600; color: var(--muted, #6b7482); }
+.ui-ptable input { width: 100%; min-height: 40px; box-sizing: border-box; padding: 8px 10px; text-align: right; border-radius: 10px;
+  border: 1px solid var(--line, #dfe3e8); background: var(--surface, #f8f9fa); color: var(--ink, #1f2733); font: inherit; font-family: var(--font-geist-mono, ui-monospace, monospace); }
+.ui-ptable input:focus { outline: none; border-color: var(--brand, #2f4a7d); }
+.ui-chip { display: inline-flex; align-items: center; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px;
+  background: var(--surface-2, #f1f3f6); color: var(--muted, #6b7482); border: 1px solid var(--line, #dfe3e8); white-space: nowrap; }
+.ui-chip.ok { background: var(--accent-soft, #e3efe8); color: var(--accent, #3d8b6a); border-color: transparent; }
+.ui-chip.warn { background: var(--red-soft, #f6e4e3); color: var(--red, #c4534f); border-color: transparent; }
+.ui-banner { border-radius: 12px; padding: 10px 13px; font-size: 14px; font-weight: 600; background: var(--red-soft, #f6e4e3); color: var(--red, #c4534f); }
+.ui-rows { display: grid; gap: 10px; }
+.ui-row { display: grid; grid-template-columns: minmax(0, 1fr) 140px auto auto; gap: 10px; align-items: center; }
+@media (max-width: 700px) { .ui-row { grid-template-columns: 1fr 1fr; } }
+.ui-link { text-decoration: none; }
+.ui-msg { border-radius: 12px; padding: 12px 14px; font-weight: 600; border: 1px solid var(--line, #dfe3e8); }
+.ui-msg.ok { background: var(--accent-soft, #e3efe8); color: var(--accent, #3d8b6a); border-color: transparent; }
+.ui-msg.err { background: var(--red-soft, #f6e4e3); color: var(--red, #c4534f); border-color: var(--red, #c4534f); }
+
+/* Page header + toolbar */
+.ui-ph { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.ui-back { color: var(--muted, #6b7482); text-decoration: none; font-size: 14px; display: inline-block; margin-bottom: 6px; }
+.ui-bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.ui-search { flex: 1 1 260px; max-width: 420px; }
+.ui-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+/* Tables */
+.ui-scroll { overflow-x: auto; padding: 0; }
+.ui-tbl { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 780px; }
+.ui-tbl th { text-align: left; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted, #6b7482);
+  padding: 12px 14px; border-bottom: 1px solid var(--line, #dfe3e8); white-space: nowrap; }
+.ui-tbl td { padding: 12px 14px; border-bottom: 1px solid var(--line, #dfe3e8); vertical-align: top; }
+.ui-tbl tbody tr:last-child td { border-bottom: 0; }
+.ui-tbl tbody tr { position: relative; }
+.ui-tbl tbody tr:hover { background: var(--surface-2, #f1f3f6); }
+.ui-tbl .r { text-align: right; }
+.ui-tbl .open { text-decoration: none; color: inherit; }
+.ui-tbl .open::after { content: ""; position: absolute; inset: 0; }
+.ui-tbl .tel { position: relative; z-index: 1; }
+.ui-dim { opacity: .62; }
+.ui-code { font-family: var(--font-geist-mono, ui-monospace, monospace); font-weight: 700; letter-spacing: .04em; }
+.ui-plate { display: inline-block; font-family: var(--font-geist-mono, ui-monospace, monospace); font-weight: 700; padding: 2px 8px;
+  border: 1.5px solid var(--line, #dfe3e8); border-radius: 6px; background: var(--surface-2, #f1f3f6); white-space: nowrap; }
+.ui-price { font-family: var(--font-geist-mono, ui-monospace, monospace); font-weight: 700; white-space: nowrap; }
+.ui-chip.info { background: var(--brand-soft, #e6eaf2); color: var(--brand, #2f4a7d); border-color: transparent; }
+.ui-chip.amber { background: color-mix(in srgb, var(--amber, #a07a3e) 16%, transparent); color: var(--amber, #a07a3e); border-color: transparent; }
+.ui-chip.violet { background: color-mix(in srgb, #7a5fb0 16%, transparent); color: #7a5fb0; border-color: transparent; }
+.ui-chips { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+.ui-pager { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+
+/* Step forms (numbered sections like the booking form of the prototype) */
+.ui-steps { counter-reset: step; display: flex; flex-direction: column; gap: 22px; }
+.ui-step-h { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 700; margin-bottom: 12px; }
+.ui-step-h::before { counter-increment: step; content: counter(step); width: 28px; height: 28px; border-radius: 9px; flex: none;
+  background: var(--brand-soft, #e6eaf2); color: var(--brand, #2f4a7d); display: grid; place-items: center; font-size: 13px; font-weight: 800; }
+.ui-ratecards { display: grid; gap: 10px; }
+.ui-ratecard { display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; border: 1.5px solid var(--line, #dfe3e8);
+  border-radius: 16px; padding: 14px; background: var(--surface, #f8f9fa); text-decoration: none; color: inherit; min-height: 64px; }
+.ui-ratecard:hover { border-color: var(--brand, #2f4a7d); }
+.ui-ratecard .ic { width: 46px; height: 46px; border-radius: 13px; background: var(--brand-soft, #e6eaf2); color: var(--brand, #2f4a7d); display: grid; place-items: center; }
+.ui-ratecard b { display: block; }
+.ui-ratecard .sub { display: block; font-size: 13px; color: var(--muted, #6b7482); }
+.ui-details > summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; font-weight: 700; font-size: 15px; list-style: none; }
+.ui-details > summary::-webkit-details-marker { display: none; }
+.ui-details > summary::after { content: "▾"; margin-left: auto; color: var(--muted, #6b7482); }
+.ui-details[open] > summary::after { content: "▴"; }
+
+/* Key/value lines (detail pages) */
+.ui-kv { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; }
+.ui-kv.tot { border-top: 1px solid var(--line, #dfe3e8); padding-top: 10px; font-weight: 800; font-size: 18px; }
+.ui-kv > span:last-child { text-align: right; }
+.ui-hist { border-top: 1px solid var(--line, #dfe3e8); padding-top: 8px; font-size: 14px; }
+.ui-btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
