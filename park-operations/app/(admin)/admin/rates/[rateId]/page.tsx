@@ -29,51 +29,49 @@ export default async function RatePage({
 
   return (
     <div className="page">
-      <div>
-        <Link href="/admin/rates" className="muted">← Tarife &amp; Preise</Link>
-        <h1 style={{ margin: "4px 0 0" }}>{rate.name}</h1>
-        <p className="muted" style={{ margin: "4px 0 0" }}>
-          {b.name} · {SERVICE_LABEL[rate.service]} · {LOT_LABEL[rate.lotType]} · {rate.location.name}
-        </p>
+      <div className="ui-ph">
+        <div>
+          <Link href={`/admin/rates?brand=${b.id}`} className="ui-back">← Tarife &amp; Preise</Link>
+          <h1>{rate.name}</h1>
+          <p>{b.name} · {SERVICE_LABEL[rate.service]} · {LOT_LABEL[rate.lotType]} · {rate.location.name}</p>
+        </div>
+        <span className={`ui-chip ${rate.active ? "ok" : "warn"}`}>{rate.active ? "aktiv" : "inaktiv"}</span>
       </div>
 
       <Message saved={sp.saved} error={sp.error} />
 
-      <form action={savePriceTableAction} className="card pad" style={{ display: "grid", gap: 12 }}>
+      <form action={savePriceTableAction} className="card pad ui-stack">
         <input type="hidden" name="id" value={rate.id} />
-        <b>Preisliste (ganzjährig)</b>
-        <span className="muted" style={{ fontSize: 12 }}>
+        <div className="ui-sec-t">Preisliste (ganzjährig)</div>
+        <span className="ui-meta">
           Preis für die gesamte Dauer, Anreise- und Abreisetag zählen mit. Alle 30 Felder müssen ausgefüllt sein.
         </span>
-        <div style={{ ...grid, gridTemplateColumns: "repeat(auto-fit, minmax(110px, 1fr))" }}>
+        <div className="ui-ptable">
           {Array.from({ length: 30 }, (_, i) => (
-            <Field
-              key={i}
-              label={`${i + 1} ${i === 0 ? "Tag" : "Tage"}`}
-              name={`d${i + 1}`}
-              defaultValue={table ? formatEuro(table.dayPriceCents[i]) : ""}
-            />
+            <label key={i}>
+              {i + 1} {i === 0 ? "Tag" : "Tage"}
+              <input name={`d${i + 1}`} inputMode="decimal" autoComplete="off" defaultValue={table ? formatEuro(table.dayPriceCents[i]) : ""} />
+            </label>
           ))}
+          <label>
+            Jeder weitere
+            <input name="extra" inputMode="decimal" autoComplete="off" defaultValue={table ? formatEuro(table.extraDayCents) : ""} />
+          </label>
         </div>
-        <Field
-          label="Jeder weitere Tag ab Tag 31 (€)"
-          name="extra"
-          defaultValue={table ? formatEuro(table.extraDayCents) : ""}
-        />
-        <button className="btn" type="submit">Preise speichern</button>
+        <div><button className="btn" type="submit">Preise speichern</button></div>
       </form>
 
-      <form action={updateRateAction} className="card pad" style={{ display: "grid", gap: 12 }}>
+      <form action={updateRateAction} className="card pad ui-stack">
         <input type="hidden" name="id" value={rate.id} />
-        <b>Einstellungen des Tarifs</b>
-        <div style={grid}>
+        <div className="ui-sec-t">Einstellungen des Tarifs</div>
+        <div className="ui-kgrid">
           <Field text label="Name" name="name" defaultValue={rate.name} required />
           <Field label="Sortierung" name="sort" defaultValue={rate.sort} />
+          <Check label="Aktiv (buchbar)" name="active" checked={rate.active} />
         </div>
-        <Check label="Aktiv (buchbar)" name="active" checked={rate.active} />
 
-        <b>Abweichungen von der Marke</b>
-        <span className="muted" style={{ fontSize: 12 }}>Leer lassen = Wert der Marke gilt.</span>
+        <div className="ui-sec-t" style={{ marginTop: 6 }}>Abweichungen von der Marke</div>
+        <span className="ui-meta">Leer lassen = Wert der Marke gilt.</span>
         <div style={grid}>
           <Field label="Inklusive Personen" name="personsIncluded" defaultValue={rate.personsIncluded ?? ""} placeholder={String(b.personsIncluded)} />
           <Field label="Preis je weitere Person (€)" name="extraPersonPrice" defaultValue={rate.extraPersonPriceCents === null ? "" : formatEuro(rate.extraPersonPriceCents)} placeholder={formatEuro(b.extraPersonPriceCents)} />
@@ -82,7 +80,7 @@ export default async function RatePage({
           <TriSelect label="Kinder zählen als Personen" name="kidsCountAsPerson" value={rate.kidsCountAsPerson} brandValue={b.kidsCountAsPerson} />
           <TriSelect label="Kindersitze anbieten" name="seatsEnabled" value={rate.seatsEnabled} brandValue={b.seatsEnabled} />
         </div>
-        <button className="btn" type="submit">Einstellungen speichern</button>
+        <div><button className="btn" type="submit">Einstellungen speichern</button></div>
       </form>
     </div>
   );
